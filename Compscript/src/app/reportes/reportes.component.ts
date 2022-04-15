@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AnalizarService } from '../servicios/analizar.service';
 
 @Component({
   selector: 'app-reportes',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./reportes.component.css']
 })
 export class ReportesComponent implements OnInit {
-
-  constructor() { }
+  salidaE: Array<any> =  this.analizarService.getErrores();     //Texto que se va amostrar en consola
+  constructor(private analizarService: AnalizarService) { }
 
   ngOnInit(): void {
+    this.salidaE =  this.analizarService.getErrores(); 
+    console.log(this.salidaE);
   }
 
 }

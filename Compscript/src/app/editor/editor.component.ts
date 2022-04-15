@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
+import { AnalizarService } from 'src/app/servicios/analizar.service';
 
 @Component({
   selector: 'app-editor',
@@ -15,7 +18,7 @@ export class EditorComponent implements OnInit {
 
   fileName = '';
 
-  constructor() { }
+  constructor(private analizarService: AnalizarService) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -26,7 +29,18 @@ export class EditorComponent implements OnInit {
 
   enviarCodigo(): void {
     this.entrada = this.form.controls["codigo"].value; 
-    this.salida = "\n" + this.entrada; //Borrar
+    var objeto = {
+      entrada: this.entrada,
+    }
+    this.analizarService.ejecutar(objeto).subscribe((res:any)=>{
+      console.log(res)
+      //this.salida = (res.consola);
+      this.salida = (res.message);
+      this.analizarService.setErrores(res.errores.lista);
+      console.log(this.analizarService.getErrores());
+    }, err=>{
+      console.log(err)
+    });
   }
 
   //Borra el texto del cuadro

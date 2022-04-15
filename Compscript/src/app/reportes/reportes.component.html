@@ -16,6 +16,13 @@
                     <th>Línea</th>
                     <th>Columna</th>
                 </tr>
+                <tr *ngFor="let error of salidaE; let i = index">
+                    <td>{{i + 1}}</td>
+                    <td>{{error.tipo}}</td>
+                    <td>{{error.descripcion}}</td>
+                    <td>{{error.linea}}</td>
+                    <td>{{error.columna}}</td>
+                </tr>
             </table>
         </div>
     </div>
