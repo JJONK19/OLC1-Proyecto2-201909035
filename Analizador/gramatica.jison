@@ -139,7 +139,6 @@ EXPRESION: EXPRESION mas EXPRESION
          | EXPRESION div EXPRESION
          | EXPRESION mod EXPRESION
          | EXPRESION exp EXPRESION
-         | menos EXPRESION %prec umenos
          | EXPRESION igual EXPRESION
          | EXPRESION desigual EXPRESION
          | EXPRESION menor EXPRESION
@@ -148,6 +147,7 @@ EXPRESION: EXPRESION mas EXPRESION
          | EXPRESION mayorIgual EXPRESION
          | EXPRESION or EXPRESION
          | EXPRESION and EXPRESION
+         | menos EXPRESION %prec umenos
          | not EXPRESION
          | parA EXPRESION parC
          | numero
