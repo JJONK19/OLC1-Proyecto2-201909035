@@ -56,16 +56,6 @@ class Entorno {
     }
 
     //Buscar ----------------------------------------------------------------------------------------
-    //Determina si el simbolo existe en el entorno actual
-    buscarSimbolo(nombre) {
-        var resultado = this.tablaSimbolos.get(nombre.toLowerCase())
-        if (resultado != null) {
-            return true
-        }
-        return false
-    }
-
-    //existeSimboloActualizar
     //Determina si el simbolo existe en todos los niveles
     buscarSimboloGlobal(nombre) {
         for (let entorno = this; entorno != null; entorno = entorno.anterior) {
@@ -77,7 +67,7 @@ class Entorno {
         return false
     }
 
-    //Determina si existe el metodo. Solom aplica para el entorno global.
+    //Determina si existe el metodo. Solo aplica para el entorno global.
     buscarMetodo(nombre) {
         for (let entorno = this; entorno != null; entorno = entorno.anterior) {
             var resultado = entorno.tablaMetodos.get(nombre.toLowerCase())

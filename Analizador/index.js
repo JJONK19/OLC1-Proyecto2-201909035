@@ -1,6 +1,8 @@
 'use strict'
 const express = require('express')
 const bodParser = require('body-parser')
+const Entorno = require("./recursos/datos/Entorno");
+const Iniciar = require("./recursos/instruccion/Iniciar");
 let cors = require('cors')
 
 const app = express()
@@ -20,11 +22,13 @@ app.get('/',(req,res)=>{
 app.post('/analizar',(req,res)=>{
     let parser = require('./gramatica');
     var entrada = req.body.entrada;
-    console.log(entrada)
-    var analisis = parser.parse(entrada)
-    console.log(analisis)
+    var arbol = parser.parse(entrada)
+    const global = new Entorno(null)
+    let recorrido = Iniciar(arbol , global)
     var respuesta={
         message:"Resultado correcto",
+        ast: arbol,
+        salida: recorrido,
         errores:analisis.lerrores
     }
     res.send(respuesta)

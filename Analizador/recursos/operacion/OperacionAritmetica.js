@@ -1,8 +1,8 @@
-const TIPO_DATO = require("../enum/TipoDato");
-const TIPO_OPERACION = require("../enum/TipoOperacion");
-const TIPO_VALOR = require("../enum/TipoValor");
-const Tipos = require("./Tipos");
-const Valores = require("./Valores");
+const TIPO_DATO = require("../enum/TipoDato")
+const TIPO_OPERACION = require("../enum/TipoOperacion")
+const TIPO_VALOR = require("../enum/TipoValor")
+const Tipos = require("./Tipos")
+const Valores = require("./Valores")
 
 function Aritmetica(expresion, entorno){
     if(expresion.tipo === TIPO_VALOR.INT || expresion.tipo === TIPO_VALOR.DOUBLE || 

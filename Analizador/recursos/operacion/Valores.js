@@ -1,7 +1,7 @@
 //Conversión y retorno de valores basicos
 //Es una operacion terminal
-const TIPO_DATO = require("../enum/TipoDato");
-const TIPO_VALOR = require("../enum/TipoValor");
+const TIPO_DATO = require("../enum/TipoDato")
+const TIPO_VALOR = require("../enum/TipoValor")
 
 function Valores(expresion, entorno){
     if(expresion.tipo === TIPO_VALOR.INT){

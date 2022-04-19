@@ -1,12 +1,12 @@
 //Tioos de Instruccion que pueden encontrarse en el lenguaje
 const TIPO_INSTRUCCION = {
-    PRINT: 'I_PRINT',
-    DECLARACION: 'DECLARACION',
-    ASIGNACION: 'ASIGNACION',
-    DEC_METODO: 'DEC_METODO',
+    DECLARACIONV: 'DECLARACIONV',
+    ASIGNACIONV: 'ASIGNACIONV',
+    DMETODO: 'DMETODO',
     RUN: 'RUN',
-    LLAMADA_METODO: 'LLAMADA_METODO',
-    WHILE: 'WHILE'
+    LLAMADA: 'LLAMADA',
+    WHILE: 'WHILE',
+    PRINT: 'PRINT'
 }
 
 module.exports = TIPO_INSTRUCCION

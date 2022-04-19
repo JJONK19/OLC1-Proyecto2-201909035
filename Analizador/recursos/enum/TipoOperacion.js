@@ -1,5 +1,6 @@
 //Operaciones relacionañes, logicas y aritmeticas
 const TIPO_OPERACION = {
+    //Aritmeticas
     SUMA: 'SUMA',
     RESTA: 'RESTA',
     MULTIPLICACION: 'MULTIPLICACION',
@@ -7,12 +8,14 @@ const TIPO_OPERACION = {
     POTENCIA: 'POTENCIA',
     MODULO: 'MODULO',
     UNARIO: 'UNARIO',
+    //Relacionales
     IGUAL: 'IGUAL',
     DESIGUAL: 'DESIGUAL',
     MENORIGUAL: 'MENORIGUAL',
     MAYORIGUAL: 'MAYORIGUAL',
     MENOR: 'MENOR',
     MAYOR: 'MAYOR',
+    //Logicas
     AND: 'AND',
     OR: 'OR',
     NOT: 'NOT',
