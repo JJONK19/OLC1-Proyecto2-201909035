@@ -2,7 +2,7 @@
 //Si retorna null, se completo con éxito
 const Simbolo = require("../datos/Simbolo")
 const TIPO_DATO = require("../enum/TipoDato")
-const Operacion = require("../operacion/Operacion")
+const Operacion = require("../operacion/Operaciones")
 
 function DeclararParametro(instruccion, entorno){
     //Declaracion de Enteros

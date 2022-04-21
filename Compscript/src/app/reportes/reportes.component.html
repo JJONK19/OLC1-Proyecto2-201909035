@@ -29,15 +29,25 @@
     <!--Tabla de Tokens-->
     <div class ="row">
         <div class="col-100">
-            <h2>Tabla de Tokens</h2>
+            <h2>Tabla de Simbolos</h2>
             <table>
                 <tr>
+                    <th>#</th>
                     <th>Identificador</th>
                     <th>Clase</th>
                     <th>Tipo</th>
                     <th>Entorno</th>
                     <th>Línea</th>
                     <th>Columna</th>
+                </tr>
+                <tr *ngFor="let simbolo of salidaS; let i = index">
+                    <td>{{i + 1}}</td>
+                    <td>{{simbolo.id}}</td>
+                    <td>Variable</td>
+                    <td>{{simbolo.tipo}}</td>
+                    <td>{{simbolo.entorno}}</td>
+                    <td>{{simbolo.linea}}</td>
+                    <td>{{simbolo.columna}}</td>
                 </tr>
             </table>
         </div>

@@ -1,4 +1,4 @@
-const Operacion = require("../operacion/Operacion")
+const Operacion = require("../operacion/Operaciones")
 
 function Print(instruccion, entorno){
     let expresion = instruccion.expresion

@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 export class AnalizarService {
 
   static el: Array<any>;
-  static edes: number = 0;
+  static sl: Array<any>;
 
   constructor(private http: HttpClient) { }
 
@@ -29,5 +29,13 @@ export class AnalizarService {
 
   getErrores(): Array<any>{
     return AnalizarService.el;
+  }
+
+  setSimbolos(lista:Array<any>):void{
+    AnalizarService.sl = lista;
+  }
+
+  getSimbolos(): Array<any>{
+    return AnalizarService.sl;
   }
 }

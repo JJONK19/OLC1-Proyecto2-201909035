@@ -1,6 +1,6 @@
 const TIPO_DATO = require("../enum/TipoDato")
 const Entorno = require("../datos/Entorno")
-const Operacion = require("../operacion/Operacion")
+const Operacion = require("../operacion/Operaciones")
 
 function While(instruccion, entorno){
     var salida = ""

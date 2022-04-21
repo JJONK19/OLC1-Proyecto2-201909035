@@ -2,8 +2,9 @@
 //Es una operacion terminal
 const TIPO_DATO = require("../enum/TipoDato")
 const TIPO_VALOR = require("../enum/TipoValor")
+const ListaErrores = require("../errores/ListaErrores")
 
-function Valores(expresion, entorno){
+function Valores(expresion, entorno, errores){
     if(expresion.tipo === TIPO_VALOR.INT){
         return {
             valor: Number(expresion.valor),
@@ -20,14 +21,6 @@ function Valores(expresion, entorno){
             columna: expresion.columna
         }
     }
-    else if(expresion.tipo === TIPO_VALOR.STRING){
-        return {
-            valor: expresion.valor.substring(0, expresion.valor.length),
-            tipo: TIPO_DATO.STRING,
-            linea: expresion.linea,
-            columna: expresion.columna
-        }
-    }
     else if(expresion.tipo === TIPO_VALOR.BOOLEAN){
         return {
             valor: expresion.valor.toLowerCase() ==='false' ? false: true,
@@ -36,9 +29,17 @@ function Valores(expresion, entorno){
             columna: expresion.columna
         }
     }
+    else if(expresion.tipo === TIPO_VALOR.STRING){
+        return {
+            valor: expresion.valor.substring(0, expresion.valor.length),
+            tipo: TIPO_DATO.STRING,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }
     else if(expresion.tipo === TIPO_VALOR.CHAR){
         return {
-            valor: expresion.valor.charAt(0),
+            valor: expresion.valor.charAt(1),
             tipo: TIPO_DATO.CHAR,
             linea: expresion.linea,
             columna: expresion.columna
@@ -54,14 +55,10 @@ function Valores(expresion, entorno){
                 columna: temp.columna
             }
         }
+        errores.add("Semántico", "Variable Inexistente: " + expresion.valor , expresion.linea, expresion.columna);
         return {
-            valor: {
-                tipo: 'Semántico',
-                descripcion: "Variable Inexistente: " + expresion.valor,
-                linea: expresion.linea,
-                columna: expresion.columna
-            },
-            tipo: null,
+            valor: null,
+            tipo: "ERROR",
             linea: expresion.linea,
             columna: expresion.columna
         }

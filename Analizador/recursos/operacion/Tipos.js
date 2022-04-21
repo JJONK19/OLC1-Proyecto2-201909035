@@ -204,7 +204,7 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             //String
             }else if(tipo1 === TIPO_DATO.STRING && tipo2 === TIPO_DATO.STRING){
-                    return TIPO_DATO.STRING
+                    return TIPO_DATO.BOOLEAN
             }
             return null
 
@@ -235,7 +235,7 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             //String
             }else if(tipo1 === TIPO_DATO.STRING && tipo2 === TIPO_DATO.STRING){
-                return TIPO_DATO.STRING
+                return TIPO_DATO.BOOLEAN
             }
             return null
 
@@ -266,7 +266,7 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             //String
             }else if(tipo1 === TIPO_DATO.STRING && tipo2 === TIPO_DATO.STRING){
-                return TIPO_DATO.STRING
+                return TIPO_DATO.BOOLEAN
             }
             return null
 
@@ -297,7 +297,7 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             //String
             }else if(tipo1 === TIPO_DATO.STRING && tipo2 === TIPO_DATO.STRING){
-                return TIPO_DATO.STRING
+                return TIPO_DATO.BOOLEAN
             }
             return null
 
@@ -328,7 +328,7 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             //String
             }else if(tipo1 === TIPO_DATO.STRING && tipo2 === TIPO_DATO.STRING){
-                return TIPO_DATO.STRING
+                return TIPO_DATO.BOOLEAN
             }
             return null
 
@@ -359,7 +359,7 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             //String
             }else if(tipo1 === TIPO_DATO.STRING && tipo2 === TIPO_DATO.STRING){
-                return TIPO_DATO.STRING
+                return TIPO_DATO.BOOLEAN
             }
             return null
         

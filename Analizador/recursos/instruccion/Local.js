@@ -1,7 +1,7 @@
 //Manejo de datos encapsulados entren llaves
-const TIPO_INSTRUCCION = require("../enume/TipoInstruccion")
+const TIPO_INSTRUCCION = require("../enum/TipoInstruccion")
 const AsignacionVariable = require("./AsignacionVariable")
-const DeclaracionVariable = require("./DeclaracionVariable")
+const DeclaracionVariable = require("./DeclararVariable")
 const While = require("./While")
 const Print = require("./Print")
 

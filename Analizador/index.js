@@ -23,13 +23,20 @@ app.post('/analizar',(req,res)=>{
     let parser = require('./gramatica');
     var entrada = req.body.entrada;
     var arbol = parser.parse(entrada)
+    //Extraer Valores
+    var errores = arbol.lerrores
+    var simbolo = arbol.lsimbolos;
+    //Ejecucuon de Instrucciones
     const global = new Entorno(null)
-    let recorrido = Iniciar(arbol , global)
+    let recorrido = Iniciar(arbol.instrucciones , global, errores, simbolo)
+    //Salida
     var respuesta={
         message:"Resultado correcto",
-        ast: arbol,
-        salida: recorrido,
-        errores:analisis.lerrores
+        //ast: arbol,        //Retorna el arbol. Debe de graficarse.
+        salida: recorrido,  //Retorna el texto de la consola
+        errores: errores,    //Retorna la lista de errores
+        simbolos: simbolo,   //Retorna la tabla de simbolos a mostrar
+        //metodos: global.tablaMetodos    //Retorna los metodos de la ejecucion
     }
     res.send(respuesta)
 })

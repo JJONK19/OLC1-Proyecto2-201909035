@@ -35,9 +35,9 @@ export class EditorComponent implements OnInit {
     this.analizarService.ejecutar(objeto).subscribe((res:any)=>{
       console.log(res)
       //this.salida = (res.consola);
-      this.salida = (res.message);
+      this.salida = (res.salida);
       this.analizarService.setErrores(res.errores.lista);
-      console.log(this.analizarService.getErrores());
+      this.analizarService.setSimbolos(res.simbolos.lista);
     }, err=>{
       console.log(err)
     });

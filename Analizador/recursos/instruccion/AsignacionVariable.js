@@ -1,6 +1,6 @@
 //Permite asignar un valor de cualquier tipo a una variable
 //Si retorna null, se completo con éxito
-const Operacion = require("../operacion/Operacion")
+const Operacion = require("../operacion/Operaciones")
 
 function Asignacion(instruccion, entorno){
     const id = instruccion.id               
@@ -18,7 +18,7 @@ function Asignacion(instruccion, entorno){
         }
         return {
             tipo: 'Semántico',
-            descripcion: `${id} 'es de tipo ${antiguo}, no de tipo ${nuevo}.`,
+            descripcion: `${id} es de tipo ${antiguo}, no de tipo ${nuevo}.`,
             linea: instruccion.linea,
             columna: instruccion.columna    
         }

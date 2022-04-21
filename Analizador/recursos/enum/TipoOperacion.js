@@ -15,11 +15,11 @@ const TIPO_OPERACION = {
     MAYORIGUAL: 'MAYORIGUAL',
     MENOR: 'MENOR',
     MAYOR: 'MAYOR',
+    TERNARIO: 'TERNARIO',
     //Logicas
     AND: 'AND',
     OR: 'OR',
-    NOT: 'NOT',
-    TERNARIO: 'TERNARIO'
+    NOT: 'NOT'
 }
 
 module.exports = TIPO_OPERACION

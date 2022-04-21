@@ -30,7 +30,7 @@
 "=="                        return 'igual';
 "!="                        return 'desigual';
 "<="                        return 'menorIgual';
-"=>"                        return 'mayorIgual';
+">="                        return 'mayorIgual';
 "<"                         return 'menor';
 ">"                         return 'mayor';
 "="                         return 'asignar';
@@ -62,8 +62,9 @@
 \'("\n"|"\\\\"|"\t"|"\r"|\\\'|\\\"|.)\'   return 'caracter';
 
 //Regex
-[0-9]+("."[0-9]+)?\b        return 'numero';               
-([a-zA-Z])([a-zA-Z0-9_])*   return 'identificador';  
+[0-9]+("."[0-9]+)\b        return 'doble';
+[0-9]+\b                    return 'entero';               
+([a-zA-Z_])([a-zA-Z0-9_])*   return 'identificador';  
 
 /*Fin de la cadena*/
 <<EOF>>                     return 'EOF';
@@ -79,11 +80,18 @@
 %{
         //Importes
         var ListaErrores = require("./recursos/errores/ListaErrores");
+        var ListaSimbolos = require("./recursos/datos/ListaSimbolos");
+        const TIPO_OPERACION = require('./recursos/enum/TipoOperacion');
+        const TIPO_VALOR = require('./recursos/enum/TipoValor');
+        const TIPO_DATO = require('./recursos/enum/TipoDato');
+        const INSTRUCCION = require('./recursos/instruccion/Instruccion');
 
         //Instrucciones
         var lista = new ListaErrores();
+        var simbolos = new ListaSimbolos();
 
 %}
+
 
 %right 'or'
 %right 'and'
@@ -93,68 +101,188 @@
 %left 'mul' 'div' 'mod'
 %nonassoc 'exp'
 %left UMENOS
+%left 'dospuntos' 'ternario'
 
 %start INICIO
 
 %%
 
-INICIO: SENTENCIA EOF
+INICIO: SENTENCIAS EOF
         {       
-                var salida = {
-                        lerrores: lista
-                }
-                //Reiniciar la lista de Errores
-                lista = new ListaErrores();
-                
-                return salida;
+             //Objeto de Salida
+             var salida = {
+                lerrores: lista,
+                instrucciones: $1,
+                lsimbolos: simbolos
+             }
+             //Reiniciar la lista de Errores
+             lista = new ListaErrores();
+             simbolos = new ListaSimbolos();
+             return salida;
         }
 ;         
 
 SENTENCIAS: SENTENCIAS SENTENCIA
-            | SENTENCIA
+        {
+                //Insertar a la lista de instrucciones
+                $1.push($2); 
+                //Retornar la lista de instrucciones
+                $$=$1
+        }
+
+        | SENTENCIA
+        {
+                //Lista de Instrucciones
+                $$ = [$1];
+        }
 ;
 
-SENTENCIA: VARIABLES
+SENTENCIA: DVARIABLES
+        {
+                $$ = $1;
+        }
+        | error puntocoma
+        {
+                lista.add("Sintáctico", "Token Inesperado " + $1 , @1.first_line, @1.first_column + 1);
+        }
 ;
 
-VARIABLES: TIPO LISTAID asignar EXPRESION puntocoma
+//Declaracion de Variables ----------------------------------------------------------------------
+
+DVARIABLES: TIPO LISTAID asignar EXPRESION puntocoma
+        {
+                $$= INSTRUCCION.declaracionv($1, $2, $4, this._$.first_line, this._$.first_column+1)
+        }
         | TIPO LISTAID puntocoma
+        {
+                $$= INSTRUCCION.declaracionv($1, $2, null, this._$.first_line, this._$.first_column+1);
+        }
 ;
 
-LISTAID:  identificador coma LISTAID
-        | identificador
+LISTAID:  LISTAID coma identificador
+        {
+                $1.push($3); 
+                $$=$1;
+        }
+
+        | identificador 
+        {
+                $$ = [$1];
+        }
 
 ;
 
-TIPO: int   
-    | double
-    | boolean
-    | char
-    | string
+TIPO: int       {$$ = TIPO_DATO.INT}
+    | double    {$$ = TIPO_DATO.DOUBLE}
+    | boolean   {$$=TIPO_DATO.BOOLEAN}
+    | char      {$$=TIPO_DATO.CHAR}
+    | string    {$$=TIPO_DATO.STRING}
 ;
 
+//Declaracion de expresiones--------------------------------------------------------------------------
 EXPRESION: EXPRESION mas EXPRESION
-         | EXPRESION menos EXPRESION
-         | EXPRESION mul EXPRESION
-         | EXPRESION div EXPRESION
-         | EXPRESION mod EXPRESION
-         | EXPRESION exp EXPRESION
-         | EXPRESION igual EXPRESION
-         | EXPRESION desigual EXPRESION
-         | EXPRESION menor EXPRESION
-         | EXPRESION menorIgual EXPRESION
-         | EXPRESION mayor EXPRESION
-         | EXPRESION mayorIgual EXPRESION
-         | EXPRESION or EXPRESION
-         | EXPRESION and EXPRESION
-         | menos EXPRESION %prec umenos
-         | not EXPRESION
-         | parA EXPRESION parC
-         | numero
-         | true
-         | false
-         | texto
-         | caracter
-         | identificador
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.SUMA, this._$.first_line, this._$.first_column+1);
+        }
+
+        | EXPRESION menos EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.RESTA, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION mul EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.MULTIPLICACION, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION div EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.DIVISION, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION mod EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.MODULO, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION exp EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.POTENCIA, this._$.first_line, this._$.first_column+1);
+        }
+        | menos EXPRESION %prec umenos
+        {
+                $$ = INSTRUCCION.operacion($2, null, TIPO_OPERACION.UNARIO, this._$.first_line, this._$.first_column+1);
+        }
+        | parA EXPRESION parC
+        {
+                $$ = $2;
+        }
+        | EXPRESION igual EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.IGUAL, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION desigual EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.DESIGUAL, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION menor EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.MENOR, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION menorIgual EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.MENORIGUAL, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION mayor EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.MAYOR, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION mayorIgual EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.MAYORIGUAL, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION or EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.OR, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION and EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($1,$3, TIPO_OPERACION.AND, this._$.first_line, this._$.first_column+1);
+        }
+        | not EXPRESION
+        {
+                $$ = INSTRUCCION.operacion($2 ,null, TIPO_OPERACION.NOT, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION ternario EXPRESION dospuntos EXPRESION
+        {
+                $$ = INSTRUCCION.ternario($1 , $3, $5, TIPO_OPERACION.TERNARIO, this._$.first_line, this._$.first_column+1);
+        }
+        | entero
+        {
+                $$ = INSTRUCCION.valor(Number($1), TIPO_VALOR.INT, this._$.first_line, this._$.first_column+1);
+        }
+        | doble
+        {
+                $$ = INSTRUCCION.valor(Number($1), TIPO_VALOR.DOUBLE, this._$.first_line, this._$.first_column+1);
+        }
+        | true
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.BOOLEAN, this._$.first_line, this._$.first_column+1);
+        }
+        | false
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.BOOLEAN, this._$.first_line, this._$.first_column+1);
+        }
+        | texto
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.STRING, this._$.first_line, this._$.first_column+1);
+        }
+        | caracter
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.CHAR, this._$.first_line, this._$.first_column+1);
+        }
+        | identificador
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.IDENTIFICADOR, this._$.first_line, this._$.first_column+1);
+        }
 ;
+
+
+
 

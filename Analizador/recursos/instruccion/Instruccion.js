@@ -1,9 +1,21 @@
 //Constructor de Instrucciones
 const TIPO_INSTRUCCION = require("../enum/TipoInstruccion")
 
+//Tipo es el tipo de instruccion
+
 const Instruccion = {
     operacion: function(_izquierda, _derecha, _tipo, _linea, _columna){
         return {
+            izquierda: _izquierda,
+            derecha: _derecha,
+            tipo: _tipo,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    ternario: function(_condicion, _izquierda, _derecha, _tipo, _linea, _columna){
+        return {
+            condicion: _condicion,
             izquierda: _izquierda,
             derecha: _derecha,
             tipo: _tipo,
@@ -19,12 +31,12 @@ const Instruccion = {
             columna: _columna
         }
     },
-    declaracionv: function(_id, _valor, _tipodato, _linea, _columna){
+    declaracionv: function(_tipodato, _listaid, _valor, _linea, _columna){
         return {
             tipo: TIPO_INSTRUCCION.DECLARACIONV,
-            id: _id,
-            valor: _valor,
-            tipodato: _tipodato,
+            tipodato: _tipodato,                //Tipado de las variables
+            id: _listaid,                       //Lista de identificadores
+            valor: _valor,                      //Valor a asignar a las variables
             linea: _linea,
             columna: _columna
         }
