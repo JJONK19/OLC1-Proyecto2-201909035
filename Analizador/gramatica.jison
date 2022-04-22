@@ -19,6 +19,7 @@
 "string"                    return 'string';
 "true"                      return 'true';
 "false"                     return 'false';
+"new"                       return 'new';
 
 /*Caraácteres básicos*/        
 "+"                         return 'mas';
@@ -41,8 +42,8 @@
 "!"                         return 'not';
 "("                         return 'parA';
 ")"                         return 'parC';
-"{"                         return 'corA';
-"}"                         return 'corC';
+"["                         return 'corA';
+"]"                         return 'corC';
 ";"                         return 'puntocoma';
 ","                         return 'coma';
 
@@ -102,7 +103,7 @@
 %nonassoc 'exp'
 %left UMENOS
 %left 'dospuntos' 'ternario'
-
+%right 'parA' 'parC'
 %start INICIO
 
 %%
@@ -141,6 +142,18 @@ SENTENCIA: DVARIABLES
         {
                 $$ = $1;
         }
+        | AVARIABLES
+        {
+                $$ = $1;
+        }
+        | DARREGLOS
+        {
+                $$ = $1;
+        }
+        | AARREGLOS
+        {
+                $$ = $1;
+        }
         | error puntocoma
         {
                 lista.add("Sintáctico", "Token Inesperado " + $1 , @1.first_line, @1.first_column + 1);
@@ -171,14 +184,114 @@ LISTAID:  LISTAID coma identificador
         }
 
 ;
-
-TIPO: int       {$$ = TIPO_DATO.INT}
-    | double    {$$ = TIPO_DATO.DOUBLE}
-    | boolean   {$$=TIPO_DATO.BOOLEAN}
-    | char      {$$=TIPO_DATO.CHAR}
-    | string    {$$=TIPO_DATO.STRING}
+//Asignacion de Valores-------------------------------------------------------------------
+AVARIABLES: identificador asignar EXPRESION puntocoma
+        {
+               $$ = INSTRUCCION.asignacionv($1,$3, this._$.first_line, this._$.first_column+1); 
+        }
 ;
 
+//Asignacion de Arreglos-------------------------------------------------------------------
+AARREGLOS: identificador corA EXPRESION corC asignar EXPRESION puntocoma
+        {
+                $$ = INSTRUCCION.asignarv($1, $3, null, $6,  this._$.first_line, this._$.first_column+1);
+        }
+        | identificador corA EXPRESION corC corA EXPRESION corC asignar EXPRESION puntocoma
+        {
+                $$ = INSTRUCCION.asignarv($1, $3, $6, $9, this._$.first_line, this._$.first_column+1);
+        }
+;
+//Declaracion de Arreglos -----------------------------------------------------------------------------
+DARREGLOS: UDIMENSION
+        {
+                $$=$1;
+        }
+        | BDIMENSION
+        {
+                $$=$1;
+        }
+;
+
+UDIMENSION: TIPO identificador corA corC asignar new TIPO corA EXPRESION corC puntocoma
+        {
+                $$= INSTRUCCION.declaraciona1($1, $2, $7, $9, null,this._$.first_line, this._$.first_column+1)
+        }
+        | TIPO identificador corA corC asignar corA LISTAVALORES corC puntocoma
+        {
+                $$= INSTRUCCION.declaraciona2(1, $1, $2, $7, null, this._$.first_line, this._$.first_column+1);
+        }
+;
+
+BDIMENSION: TIPO identificador corA corC corA corC asignar new TIPO corA EXPRESION corC corA EXPRESION corC puntocoma
+        {
+                $$= INSTRUCCION.declaraciona1($1, $2, $9, $11, $14, this._$.first_line, this._$.first_column+1)
+        }
+        | TIPO identificador corA corC corA corC asignar corA VALORES corC puntocoma
+        {
+                $$= INSTRUCCION.declaraciona2(2, $1, $2, $9, this._$.first_line, this._$.first_column+1);
+        }
+;
+
+LISTAVALORES: LISTAVALORES coma PRIMITIVO
+        {
+                $1.push($3); 
+                $$=$1;
+        }
+        | PRIMITIVO
+        {
+                $$ = [$1];
+        }
+;
+
+VALORES: VALORES coma corA LISTAVALORES corC
+        {
+                $1.push($4); 
+                $$=$1;
+        }
+        | corA LISTAVALORES corC
+        {
+                $$ = [$2];
+        }
+;
+
+//Tipos-----------------------------------------------------------------------------------
+TIPO: int       {$$ = TIPO_DATO.INT}
+    | double    {$$ = TIPO_DATO.DOUBLE}
+    | boolean   {$$ = TIPO_DATO.BOOLEAN}
+    | char      {$$ = TIPO_DATO.CHAR}
+    | string    {$$ = TIPO_DATO.STRING}
+;
+
+//Valores Primitivos-----------------------------------------------------------------------------------
+PRIMITIVO: entero
+        {
+                $$ = INSTRUCCION.valor(Number($1), TIPO_VALOR.INT, this._$.first_line, this._$.first_column+1);
+        }
+        | doble
+        {
+                $$ = INSTRUCCION.valor(Number($1), TIPO_VALOR.DOUBLE, this._$.first_line, this._$.first_column+1);
+        }
+        | true
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.BOOLEAN, this._$.first_line, this._$.first_column+1);
+        }
+        | false
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.BOOLEAN, this._$.first_line, this._$.first_column+1);
+        }
+        | texto
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.STRING, this._$.first_line, this._$.first_column+1);
+        }
+        | caracter
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.CHAR, this._$.first_line, this._$.first_column+1);
+        }
+        | identificador
+        {
+                $$ = INSTRUCCION.valor($1, TIPO_VALOR.IDENTIFICADOR, this._$.first_line, this._$.first_column+1);
+        }
+;
 //Declaracion de expresiones--------------------------------------------------------------------------
 EXPRESION: EXPRESION mas EXPRESION
         {
@@ -280,6 +393,26 @@ EXPRESION: EXPRESION mas EXPRESION
         | identificador
         {
                 $$ = INSTRUCCION.valor($1, TIPO_VALOR.IDENTIFICADOR, this._$.first_line, this._$.first_column+1);
+        }
+        | parA TIPO parC EXPRESION
+        {
+                $$ = INSTRUCCION.casteo($2, $4, TIPO_OPERACION.CASTEO, this._$.first_line, this._$.first_column+1);
+        }
+        | EXPRESION mas mas
+        {
+                $$ = INSTRUCCION.operacion($1, null, TIPO_OPERACION.INCREMENTO, this._$.first_line, this._$.first_column+1)       
+        }
+        | EXPRESION menos menos
+        {
+                $$ = INSTRUCCION.operacion($1, null, TIPO_OPERACION.DECREMENTO, this._$.first_line, this._$.first_column+1)       
+        }
+        | identificador corA EXPRESION corC 
+        {
+                $$ = INSTRUCCION.valorv($1, $3, null,  this._$.first_line, this._$.first_column+1);
+        }
+        | identificador corA EXPRESION corC corA EXPRESION corC
+        {
+                $$ = INSTRUCCION.valorv($1, $3, $6, this._$.first_line, this._$.first_column+1);
         }
 ;
 

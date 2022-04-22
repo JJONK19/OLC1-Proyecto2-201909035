@@ -10,6 +10,9 @@ function Operaciones(expresion, entorno, errores){
         expresion.tipo === TIPO_VALOR.BOOLEAN || expresion.tipo === TIPO_VALOR.CHAR){
             return Valores(expresion, entorno, errores)
     }
+    else if(expresion.tipo === TIPO_VALOR.VECTORU){
+        return ValoresV(expresion, entorno, errores)
+    }
     //Opraciones Aritmeticas
     else if(expresion.tipo === TIPO_OPERACION.SUMA){
         return suma(expresion.izquierda, expresion.derecha, entorno, errores)
@@ -49,6 +52,14 @@ function Operaciones(expresion, entorno, errores){
         return or(expresion.izquierda, expresion.derecha, entorno, errores)
     }else if(expresion.tipo === TIPO_OPERACION.NOT){
         return not(expresion.izquierda, null, entorno, errores)
+    }
+    //Otros
+    else if(expresion.tipo === TIPO_OPERACION.CASTEO){
+        return casteo(expresion.casteo, expresion.valor, entorno, errores)
+    }else if(expresion.tipo === TIPO_OPERACION.INCREMENTO){
+        return incremento(expresion.izquierda, expresion.derecha, entorno, errores)
+    }else if(expresion.tipo === TIPO_OPERACION.DECREMENTO){
+        return decremento(expresion.izquierda, expresion.derecha, entorno, errores)
     }
 }
 
@@ -112,6 +123,109 @@ function Valores(expresion, entorno, errores){
             columna: expresion.columna
         }
     }
+}
+
+function ValoresV(expresion, entorno, errores){
+    let id = expresion.id
+    let posicion1 = expresion.posicion1 
+    let posicion2 = expresion.posicion2
+    if(posicion2 == null){
+        //Vectores Unidimensionales
+        let tamaño1 = Operaciones(posicion1, entorno, errores)
+        if(tamaño1.tipo === TIPO_DATO.INT){
+            const temp = entorno.getSimbolo(id)
+            if(temp!=null){
+                if(Array.isArray(temp.valor)){
+                    let salida = temp.valor[tamaño1.valor]
+                    if(salida != undefined){
+                        return {
+                            valor: salida,
+                            tipo: temp.tipo,
+                            linea: temp.linea,
+                            columna: temp.columna
+                        }
+                    }
+                    errores.add("Semántico", "La posición no existe en el arreglo (U)." , expresion.linea, expresion.columna);
+                    return {
+                        valor: null,
+                        tipo: "ERROR",
+                        linea: expresion.linea,
+                        columna: expresion.columna
+                    }
+                }
+                errores.add("Semántico", "La variable no es un arreglo." , expresion.linea, expresion.columna);
+                return {
+                    valor: null,
+                    tipo: "ERROR",
+                    linea: expresion.linea,
+                    columna: expresion.columna
+                }
+            }
+            errores.add("Semántico", "Variable Inexistente: " + expresion.valor , expresion.linea, expresion.columna);
+            return {
+                valor: null,
+                tipo: "ERROR",
+                linea: expresion.linea,
+                columna: expresion.columna
+            }
+        }
+        errores.add("Semántico", `La posicion ingresada ingresado de ser de tipo INT, no ${tamaño1.tipo}.` , instruccion.linea, instruccion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        //Vectores Bidimensionales
+        let tamaño1 = Operaciones(posicion1, entorno, errores)
+        let tamaño2 = Operaciones(posicion2, entorno, errores)
+        if(tamaño1.tipo === TIPO_DATO.INT && tamaño2.tipo === TIPO_DATO.INT){
+            const temp = entorno.getSimbolo(id)
+            if(temp!=null){
+                if(Array.isArray(temp.valor)){
+                    let salida = temp.valor[tamaño1.valor][tamaño2.valor]
+                    if(salida != undefined){
+                        return {
+                            valor: salida,
+                            tipo: temp.tipo,
+                            linea: temp.linea,
+                            columna: temp.columna
+                        }
+                    }
+                    errores.add("Semántico", "La posición no existe en el arreglo(B)." , expresion.linea, expresion.columna);
+                    return {
+                        valor: null,
+                        tipo: "ERROR",
+                        linea: expresion.linea,
+                        columna: expresion.columna
+                    }
+                }
+                errores.add("Semántico", "La variable no es un arreglo." , expresion.linea, expresion.columna);
+                return {
+                    valor: null,
+                    tipo: "ERROR",
+                    linea: expresion.linea,
+                    columna: expresion.columna
+                }
+            }
+            errores.add("Semántico", "Variable Inexistente: " + expresion.valor , expresion.linea, expresion.columna);
+            return {
+                valor: null,
+                tipo: "ERROR",
+                linea: expresion.linea,
+                columna: expresion.columna
+            }
+        }
+        errores.add("Semántico", `Las posiciones ingresadas deben ser de tipo INT.` , instruccion.linea, instruccion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }
+
 }
 
 
@@ -710,6 +824,107 @@ function not(_izquierda, _derecha, entorno, errores){
     }
 }
 
+//Otros
+function casteo(_casteo, _expresion, entorno, errores){
+    const valor = Operaciones(_expresion, entorno, errores)
+    const nuevo = _casteo
+    const tipoSalida = Tipos(valor.tipo, nuevo, TIPO_OPERACION.CASTEO)
+    if(tipoSalida!=null){
+        if(tipoSalida === TIPO_DATO.INT){
+            let salida = valor;
+            if(valor.tipo === TIPO_DATO.CHAR){
+                salida.valor = salida.valor.charCodeAt(0)
+            }else if(valor.tipo === TIPO_DATO.DOUBLE){
+                salida.valor = Math.trunc(salida.valor)
+            }
+            return {
+                valor: salida.valor,
+                tipo: tipoSalida,
+                linea: valor.linea,
+                columna: valor.columna
+            }
+        }else if(tipoSalida === TIPO_DATO.DOUBLE){
+            let salida = valor;
+            if(valor.tipo === TIPO_DATO.CHAR){
+                salida.valor = salida.valor.charCodeAt(0)
+                salida.valor = salida.valor + 0.0
+            }else if(valor.tipo === TIPO_DATO.INT){
+                salida.valor = salida.valor + 0.0
+            }
+            return {
+                valor: salida.valor,
+                tipo: tipoSalida,
+                linea: valor.linea,
+                columna: valor.columna
+            }
+        }else if(tipoSalida === TIPO_DATO.CHAR){
+            let salida = valor;
+            if(valor.tipo === TIPO_DATO.INT){
+                salida.valor = String.fromCharCode(salida.valor)
+            }
+            return {
+                valor: salida.valor,
+                tipo: tipoSalida,
+                linea: valor.linea,
+                columna: valor.columna
+            }
+        }
+    }
+    errores.add("Semántico", `Casteo Invalido. ${valor.tipo} no puede ser casteado a ${nuevo}.`  , valor.linea, valor.columna);
+    return {
+        valor: null,
+        tipo: "ERROR",
+        linea: null,
+        columna: null
+    }
+}
 
+function incremento(_izquierda, _derecha, entorno, errores){
+    const izquierda = Operaciones(_izquierda, entorno, errores)
+    const tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.INCREMENTO)
+    if(tipoSalida!=null){
+        if(tipoSalida === TIPO_DATO.DOUBLE || tipoSalida === TIPO_DATO.INT){
+            let op1 = izquierda;
+            const resultado = op1.valor + 1;
+            return {
+                valor: resultado,
+                tipo: tipoSalida,
+                linea: _izquierda.linea,
+                columna: _izquierda.columna
+            }
+        }
+    }
+    errores.add("Semántico", "No se pudo realizar el incremento. Tipos Invalidos."  , _izquierda.linea, _izquierda.columna);
+    return {
+        valor: null,
+        tipo: "ERROR",
+        linea: null,
+        columna: null
+    }
+}
+
+function decremento(_izquierda, _derecha, entorno, errores){
+    const izquierda = Operaciones(_izquierda, entorno, errores)
+    const tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.DECREMENTO)
+    if(tipoSalida!=null){
+        if(tipoSalida === TIPO_DATO.DOUBLE || tipoSalida === TIPO_DATO.INT){
+            let op1 = izquierda;
+            const resultado = op1.valor - 1;
+            return {
+                valor: resultado,
+                tipo: tipoSalida,
+                linea: _izquierda.linea,
+                columna: _izquierda.columna
+            }
+        }
+    }
+    errores.add("Semántico", "No se pudo realizar el decremento. Tipos Invalidos."  , _izquierda.linea, _izquierda.columna);
+    return {
+        valor: null,
+        tipo: "ERROR",
+        linea: null,
+        columna: null
+    }
+}
 
 module.exports = Operaciones

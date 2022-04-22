@@ -385,6 +385,38 @@ function Tipos(tipo1, tipo2, operacion){
                 return TIPO_DATO.BOOLEAN
             }
             return null
+
+        case TIPO_OPERACION.CASTEO:
+            if(tipo1 === TIPO_DATO.INT && tipo2 === TIPO_DATO.DOUBLE){
+                return TIPO_DATO.DOUBLE
+            }else if(tipo1 === TIPO_DATO.DOUBLE && tipo2 === TIPO_DATO.INT){
+                return TIPO_DATO.INT
+            }else if(tipo1 === TIPO_DATO.INT && tipo2 === TIPO_DATO.CHAR){
+                return TIPO_DATO.CHAR
+            }else if(tipo1 === TIPO_DATO.CHAR && tipo2 === TIPO_DATO.INT){
+                return TIPO_DATO.INT
+            }else if(tipo1 === TIPO_DATO.CHAR && tipo2 === TIPO_DATO.DOUBLE){
+                return TIPO_DATO.DOUBLE
+            }
+            return null
+
+        case TIPO_OPERACION.INCREMENTO:
+            //Enteros
+            if(tipo1 === TIPO_DATO.INT){
+                return TIPO_DATO.INT
+            }else if(tipo1 === TIPO_DATO.DOUBLE){
+                return TIPO_DATO.DOUBLE
+            }
+            return null
+        
+        case TIPO_OPERACION.DECREMENTO:
+            //Enteros
+            if(tipo1 === TIPO_DATO.INT){
+                return TIPO_DATO.INT
+            }else if(tipo1 === TIPO_DATO.DOUBLE){
+                return TIPO_DATO.DOUBLE
+            }
+            return null
       }
 }
 

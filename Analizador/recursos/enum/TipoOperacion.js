@@ -19,7 +19,11 @@ const TIPO_OPERACION = {
     //Logicas
     AND: 'AND',
     OR: 'OR',
-    NOT: 'NOT'
+    NOT: 'NOT',
+    //Otros
+    CASTEO: 'CASTEO',
+    INCREMENTO: 'INCREMENTO',
+    DECREMENTO: 'DECREMENTO'
 }
 
 module.exports = TIPO_OPERACION

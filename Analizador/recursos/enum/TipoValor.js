@@ -5,6 +5,7 @@ const TIPO_VALOR = {
     STRING:         'VAL_STRING',
     BOOLEAN:        'VAL_BOOLEAN',
     IDENTIFICADOR:  'VAL_IDENTIFICADOR',
+    VECTORU:        'VAL_VECTORU',
     CHAR:           'VAL_CHAR'
 }
 

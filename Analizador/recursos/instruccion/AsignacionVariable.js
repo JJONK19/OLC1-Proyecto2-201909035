@@ -2,11 +2,11 @@
 //Si retorna null, se completo con éxito
 const Operacion = require("../operacion/Operaciones")
 
-function Asignacion(instruccion, entorno){
+function Asignacion(instruccion, entorno, errores, simbolo, entornoName){
     const id = instruccion.id               
     const buscar = entorno.buscarSimboloGlobal(id)
     if(buscar){
-        var valor = Operacion(instruccion.expresion, entorno)
+        var valor = Operacion(instruccion.expresion, entorno, errores)
         var variable = entorno.getSimbolo(id)
         let antiguo = variable.tipo
         let nuevo = valor.tipo
@@ -14,21 +14,14 @@ function Asignacion(instruccion, entorno){
         if(antiguo===nuevo){
             variable.valor = valor.valor
             entorno.actualizar(id , variable)
+            simbolo.update(id, entornoName, valor.valor)
             return null
         }
-        return {
-            tipo: 'Semántico',
-            descripcion: `${id} es de tipo ${antiguo}, no de tipo ${nuevo}.`,
-            linea: instruccion.linea,
-            columna: instruccion.columna    
-        }
+        errores.add("Semántico", `${id} es de tipo ${antiguo}, no de tipo ${nuevo}.` , instruccion.linea, instruccion.columna);
+        return `${id} es de tipo ${antiguo}, no de tipo ${nuevo}.`
     }
-    return {
-        tipo: 'Semántico',
-        descripcion: `${id} no existe.`,
-        linea: instruccion.linea,
-        columna: instruccion.columna
-    }
+    errores.add("Semántico", `${id} no puede recibir valores porque no existe.` , instruccion.linea, instruccion.columna);
+    return `${id} no puede recibir valores porque no existe.`
 }
 
 module.exports = Asignacion

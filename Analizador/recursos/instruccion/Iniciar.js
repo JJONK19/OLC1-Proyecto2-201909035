@@ -1,7 +1,9 @@
 //Prepara y carga la informacion relevante
 const TIPO_INSTRUCCION = require("../enum/TipoInstruccion")
 const AsignacionVariable = require("./AsignacionVariable")
+const AsignacionArreglos = require("./AsignacionArreglo")
 const DeclararVariable = require("./DeclararVariable")
+const DeclararArreglos = require("./DeclararArreglos")
 const DeclararMetodo = require("./DeclararMetodo")
 const ListaErrores = require("../errores/ListaErrores");
 const ListaSimbolos = require("../datos/ListaSimbolos");
@@ -9,18 +11,7 @@ const Run = require("./Run")
 
 function Iniciar(instrucciones, entorno, errores, simbolo){
     var salida = ""
-    //Buscar Método Run-----------------------------------------------------------
-    var contador=0;
-    for(let i = 0; i < instrucciones.length; i++){
-        if(instrucciones[i].tipo===TIPO_INSTRUCCION.RUN){
-            contador++;
-        }
-    }
-    if(contador > 1){
-        errores.add("Semántico", "Existe más de un instacia de run." , 0, 0);
-        return 'Error: Existe más de una instancia de run.'
-    }
-
+    
     //Declaracion, asignacion y creacion de metodos y variables
     for(let i = 0; i< instrucciones.length; i++){
         if (instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONV){
@@ -30,20 +21,32 @@ function Iniciar(instrucciones, entorno, errores, simbolo){
             }
         }
         else if (instrucciones[i].tipo === TIPO_INSTRUCCION.ASIGNACIONV){
-            var consola = AsignacionVariable(instruccion, entorno)
+            var consola = AsignacionVariable(instrucciones[i], entorno, errores, simbolo, "GLOBAL")
+            if(consola != null){
+                salida += consola +'\n'
+            }
+        }
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA1 || instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA2){
+            var consola = DeclararArreglos(instrucciones[i], entorno, errores, simbolo, "GLOBAL")
+            if(consola != null){
+                salida += consola +'\n'
+            }
+        }
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.ASIGNACIONA){
+            var consola = AsignacionArreglos(instrucciones[i], entorno, errores, simbolo, "GLOBAL")
             if(consola != null){
                 salida += consola +'\n'
             }
         }
         else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DMETODO){
-            var consola = DeclararMetodo(instruccion, entorno)
+            var consola = DeclararMetodo(instrucciones[i], entorno)
             if(consola != null){
                 salida += consola.descripcion + " Fila: " + consola.linea + " Columna: " + consola.columna +'\n'
             }
         }
     }
 
-    //Ejecutar la funcion con Run
+    //Ejecutar las funciones con Run
     for(let i = 0; i < instrucciones.length; i++){
         if (instrucciones[i].tipo === TIPO_INSTRUCCION.RUN){
             var consola = Run(instrucciones[i], entorno)
@@ -53,7 +56,6 @@ function Iniciar(instrucciones, entorno, errores, simbolo){
                 }
                 salida += consola +'\n'
             }
-            break
         }
     }
     return salida
