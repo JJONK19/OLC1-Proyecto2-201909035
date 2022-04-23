@@ -10,6 +10,7 @@ export class AnalizarService {
 
   static el: Array<any>;
   static sl: Array<any>;
+  static sm: Array<any>;
 
   constructor(private http: HttpClient) { }
 
@@ -37,5 +38,13 @@ export class AnalizarService {
 
   getSimbolos(): Array<any>{
     return AnalizarService.sl;
+  }
+
+  setMetodos(lista:Array<any>):void{
+    AnalizarService.sm = lista;
+  }
+
+  getMetodos(): Array<any>{
+    return AnalizarService.sm;
   }
 }

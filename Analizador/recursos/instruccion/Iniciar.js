@@ -5,11 +5,12 @@ const AsignacionArreglos = require("./AsignacionArreglo")
 const DeclararVariable = require("./DeclararVariable")
 const DeclararArreglos = require("./DeclararArreglos")
 const DeclararMetodo = require("./DeclararMetodo")
+const DeclararFuncion = require("./DeclararFuncion")
 const ListaErrores = require("../errores/ListaErrores");
 const ListaSimbolos = require("../datos/ListaSimbolos");
 const Run = require("./Run")
 
-function Iniciar(instrucciones, entorno, errores, simbolo){
+function Iniciar(instrucciones, entorno, errores, simbolo, metodo){
     var salida = ""
     
     //Declaracion, asignacion y creacion de metodos y variables
@@ -20,28 +21,23 @@ function Iniciar(instrucciones, entorno, errores, simbolo){
                 salida += consola + "\n"
             }
         }
-        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.ASIGNACIONV){
-            var consola = AsignacionVariable(instrucciones[i], entorno, errores, simbolo, "GLOBAL")
-            if(consola != null){
-                salida += consola +'\n'
-            }
-        }
         else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA1 || instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA2){
             var consola = DeclararArreglos(instrucciones[i], entorno, errores, simbolo, "GLOBAL")
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.ASIGNACIONA){
-            var consola = AsignacionArreglos(instrucciones[i], entorno, errores, simbolo, "GLOBAL")
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DMETODO){
+            var consola = DeclararMetodo(instrucciones[i], entorno, errores, metodo)
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DMETODO){
-            var consola = DeclararMetodo(instrucciones[i], entorno)
+
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DFUNCION){
+            var consola = DeclararFuncion(instrucciones[i], entorno, errores, metodo)
             if(consola != null){
-                salida += consola.descripcion + " Fila: " + consola.linea + " Columna: " + consola.columna +'\n'
+                salida += salida += consola +'\n'
             }
         }
     }
@@ -49,12 +45,13 @@ function Iniciar(instrucciones, entorno, errores, simbolo){
     //Ejecutar las funciones con Run
     for(let i = 0; i < instrucciones.length; i++){
         if (instrucciones[i].tipo === TIPO_INSTRUCCION.RUN){
-            var consola = Run(instrucciones[i], entorno)
+            var consola = Run(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
-                if(typeof consola === 'object'){
-                    salida += consola.descripcion + " Fila: " + consola.linea + " Columna: " + consola.columna +'\n'
+                if(typeof(consola) == 'object'){
+                    salida += consola.salida +'\n'
+                }else{
+                    salida += consola +'\n'
                 }
-                salida += consola +'\n'
             }
         }
     }

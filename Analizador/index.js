@@ -26,9 +26,10 @@ app.post('/analizar',(req,res)=>{
     //Extraer Valores
     var errores = arbol.lerrores
     var simbolo = arbol.lsimbolos;
+    var metodos = arbol.lmetodos
     //Ejecucuon de Instrucciones
-    const global = new Entorno(null)
-    let recorrido = Iniciar(arbol.instrucciones , global, errores, simbolo)
+    const global = new Entorno(null, "GLOBAL")
+    let recorrido = Iniciar(arbol.instrucciones , global, errores, simbolo, metodos)
     //Salida
     var respuesta={
         message:"Resultado correcto",
@@ -36,7 +37,7 @@ app.post('/analizar',(req,res)=>{
         salida: recorrido,  //Retorna el texto de la consola
         errores: errores,    //Retorna la lista de errores
         simbolos: simbolo,   //Retorna la tabla de simbolos a mostrar
-        //metodos: global.tablaMetodos    //Retorna los metodos de la ejecucion
+        metodos: metodos    //Retorna los metodos de la ejecucion
     }
     res.send(respuesta)
 })

@@ -1,9 +1,9 @@
 //Declaracion de Variables
 //Si retorna null, se completo con éxito
-const TIPO_DATO = require("../enum/TipoDato")
-const Simbolo = require("../datos/Simbolo")
-const Operacion = require("../operacion/Operaciones")
-const ListaErrores = require("../errores/ListaErrores")
+const TIPO_DATO = require("../enum/TipoDato");
+const Simbolo = require("../datos/Simbolo");
+const Operacion = require("../operacion/Operaciones");
+const ListaErrores = require("../errores/ListaErrores");
 const ListaSimbolos = require("../datos/ListaSimbolos");
 
 
@@ -12,7 +12,7 @@ function DeclararVariable(instruccion, entorno, errores, simbolo, entornoName){
     if(instruccion.tipodato === TIPO_DATO.INT){
         let valor = 0
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno, errores)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.INT){
                 valor = resultado.valor
             }
@@ -37,7 +37,7 @@ function DeclararVariable(instruccion, entorno, errores, simbolo, entornoName){
     else if(instruccion.tipodato === TIPO_DATO.DOUBLE){
         let valor = 0.0
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno, errores)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.DOUBLE){
                 valor = resultado.valor
             }
@@ -61,7 +61,7 @@ function DeclararVariable(instruccion, entorno, errores, simbolo, entornoName){
     else if(instruccion.tipodato === TIPO_DATO.BOOLEAN){
         let valor = true
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno, errores)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.BOOLEAN){
                 valor = resultado.valor
             }
@@ -85,7 +85,7 @@ function DeclararVariable(instruccion, entorno, errores, simbolo, entornoName){
     else if(instruccion.tipodato === TIPO_DATO.CHAR){
         let valor = '\u0000'
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno, errores)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.CHAR){
                 valor = resultado.valor
             }
@@ -109,7 +109,7 @@ function DeclararVariable(instruccion, entorno, errores, simbolo, entornoName){
     else if(instruccion.tipodato === TIPO_DATO.STRING){
         let valor = ''
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno, errores)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.STRING){
                 valor = resultado.valor
             }

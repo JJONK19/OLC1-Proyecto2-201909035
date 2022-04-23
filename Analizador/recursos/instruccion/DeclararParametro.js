@@ -1,153 +1,119 @@
 //Declaracion de Parametros
 //Si retorna null, se completo con éxito
-const Simbolo = require("../datos/Simbolo")
 const TIPO_DATO = require("../enum/TipoDato")
+const Simbolo = require("../datos/Simbolo")
 const Operacion = require("../operacion/Operaciones")
 
-function DeclararParametro(instruccion, entorno){
+function DeclararParametro(instruccion, entorno,  errores, simbolo, entornoName){ 
     //Declaracion de Enteros
     if(instruccion.tipodato === TIPO_DATO.INT){
         let valor = 0
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.INT){
                 valor = resultado.valor
             }
             else{
-                return {
-                    tipo: 'Semántico',
-                    descripcion: `${instruccion.id} 'es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`,
-                    linea: instruccion.linea,
-                    columna: instruccion.columna    
-                }
+                errores.add("Semántico", `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.` , instruccion.linea, instruccion.columna);
+                return `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`
             }
         }
         const nuevo = new Simbolo(instruccion.id, valor, instruccion.tipodato, instruccion.linea, instruccion.columna)
-        if(entorno.existeSimbolo(nuevo.id) == true){
-            return {
-                tipo: 'Semántico',
-                descripcion: `${nuevo.id} no puede ser asignado porque ya existe.`,
-                linea: instruccion.linea,
-                columna: instruccion.columna
-            }
+        if(entorno.buscarSimbolo(nuevo.id) == true){
+            errores.add("Semántico", `${nuevo.id} no puede ser asignado porque ya existe.` , instruccion.linea, instruccion.columna);
+            return `${nuevo.id} no puede ser declarado porque ya existe.`
         }
         entorno.addSimbolo(nuevo.id, nuevo)
+        simbolo.add(instruccion.id, valor, instruccion.tipodato, entornoName, instruccion.linea, instruccion.columna)
+
         return null
     }
     //Declaracion de Doubles
     else if(instruccion.tipodato === TIPO_DATO.DOUBLE){
         let valor = 0.0
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.DOUBLE){
                 valor = resultado.valor
             }
             else{
-                return {
-                    tipo: 'Semántico',
-                    descripcion: `${instruccion.id} 'es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`,
-                    linea: instruccion.linea,
-                    columna: instruccion.columna    
-                }
+                errores.add("Semántico", `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.` , instruccion.linea, instruccion.columna);
+                return `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`
             }
         }
         const nuevo = new Simbolo(instruccion.id, valor, instruccion.tipodato, instruccion.linea, instruccion.columna)
-        if(entorno.existeSimbolo(nuevo.id) == true){
-            return {
-                tipo: 'Semántico',
-                descripcion: `${nuevo.id} no puede ser asignado porque ya existe.`,
-                linea: instruccion.linea,
-                columna: instruccion.columna
-            }
+        if(entorno.buscarSimbolo(nuevo.id) == true){
+            errores.add("Semántico", `${nuevo.id} no puede ser asignado porque ya existe.` , instruccion.linea, instruccion.columna);
+            return `${nuevo.id} no puede ser declarado porque ya existe.`
         }
         entorno.addSimbolo(nuevo.id, nuevo)
+        simbolo.add(instruccion.id, valor, instruccion.tipodato, entornoName, instruccion.linea, instruccion.columna)
         return null
     }
     //Declaracion de Boolean
     else if(instruccion.tipodato === TIPO_DATO.BOOLEAN){
         let valor = true
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.BOOLEAN){
                 valor = resultado.valor
             }
             else{
-                return {
-                    tipo: 'Semántico',
-                    descripcion: `${instruccion.id} 'es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`,
-                    linea: instruccion.linea,
-                    columna: instruccion.columna    
-                }
+                errores.add("Semántico", `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.` , instruccion.linea, instruccion.columna);
+                return `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`
             }
         }
         const nuevo = new Simbolo(instruccion.id, valor, instruccion.tipodato, instruccion.linea, instruccion.columna)
-        if(entorno.existeSimbolo(nuevo.id) == true){
-            return {
-                tipo: 'Semántico',
-                descripcion: `${nuevo.id} no puede ser asignado porque ya existe.`,
-                linea: instruccion.linea,
-                columna: instruccion.columna
-            }
+        if(entorno.buscarSimbolo(nuevo.id) == true){
+            errores.add("Semántico", `${nuevo.id} no puede ser asignado porque ya existe.` , instruccion.linea, instruccion.columna);
+            return `${nuevo.id} no puede ser declarado porque ya existe.`
         }
         entorno.addSimbolo(nuevo.id, nuevo)
+        simbolo.add(instruccion.id, valor, instruccion.tipodato, entornoName, instruccion.linea, instruccion.columna)
         return null
     }
     //Declaracion de Character
     else if(instruccion.tipodato === TIPO_DATO.CHAR){
         let valor = '\u0000'
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.CHAR){
                 valor = resultado.valor
             }
             else{
-                return {
-                    tipo: 'Semántico',
-                    descripcion: `${instruccion.id} 'es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`,
-                    linea: instruccion.linea,
-                    columna: instruccion.columna    
-                }
+                errores.add("Semántico", `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.` , instruccion.linea, instruccion.columna);
+                return `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`
             }
         }
         const nuevo = new Simbolo(instruccion.id, valor, instruccion.tipodato, instruccion.linea, instruccion.columna)
-        if(entorno.existeSimbolo(nuevo.id) == true){
-            return {
-                tipo: 'Semántico',
-                descripcion: `${nuevo.id} no puede ser asignado porque ya existe.`,
-                linea: instruccion.linea,
-                columna: instruccion.columna
-            }
+        if(entorno.buscarSimbolo(nuevo.id) == true){
+            errores.add("Semántico", `${nuevo.id} no puede ser asignado porque ya existe.` , instruccion.linea, instruccion.columna);
+            return `${nuevo.id} no puede ser declarado porque ya existe.`
         }
         entorno.addSimbolo(nuevo.id, nuevo)
+        simbolo.add(instruccion.id, valor, instruccion.tipodato, entornoName, instruccion.linea, instruccion.columna)
         return null
     }
     //Declaracion de String
     else if(instruccion.tipodato === TIPO_DATO.STRING){
         let valor = ''
         if(instruccion.valor != null){
-            let resultado = Operacion(instruccion.valor, entorno)
+            let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
             if(resultado.tipo === TIPO_DATO.STRING){
                 valor = resultado.valor
             }
             else{
-                return {
-                    tipo: 'Semántico',
-                    descripcion: `${instruccion.id} 'es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`,
-                    linea: instruccion.linea,
-                    columna: instruccion.columna    
-                }
+                errores.add("Semántico", `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.` , instruccion.linea, instruccion.columna);
+                return `${instruccion.id} es de tipo ${instruccion.tipodato}, no de tipo ${resultado.tipo}.`
             }
         }
         const nuevo = new Simbolo(instruccion.id, valor, instruccion.tipodato, instruccion.linea, instruccion.columna)
-        if(entorno.existeSimbolo(nuevo.id) == true){
-            return {
-                tipo: 'Semántico',
-                descripcion: `${nuevo.id} no puede ser asignado porque ya existe.`,
-                linea: instruccion.linea,
-                columna: instruccion.columna
-            }
+        if(entorno.buscarSimbolo(nuevo.id) == true){
+            errores.add("Semántico", `${nuevo.id} no puede ser asignado porque ya existe.` , instruccion.linea, instruccion.columna);
+            return `${nuevo.id} no puede ser declarado porque ya existe.`
         }
         entorno.addSimbolo(nuevo.id, nuevo)
+        simbolo.add(instruccion.id, valor, instruccion.tipodato, entornoName, instruccion.linea, instruccion.columna)
         return null
     }
 

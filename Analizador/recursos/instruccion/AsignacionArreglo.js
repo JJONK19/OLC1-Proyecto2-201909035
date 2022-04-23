@@ -7,22 +7,23 @@ function AsignacionA(instruccion, entorno, errores, simbolo, entornoName){
     let posicion2 = instruccion.posicion2
     const buscar = entorno.buscarSimboloGlobal(id)
     if(buscar){
-        var valor = Operaciones(instruccion.expresion, entorno, errores)
-        var temp = entorno.getSimbolo(id)
+        var valor = Operaciones(instruccion.expresion, entorno, errores, simbolo)
+        var variable = entorno.getSimboloE(id)
+        var temp = variable.resultado
         let antiguo = temp.tipo
         let nuevo = valor.tipo
         
         if(antiguo===nuevo){
             if(posicion2 == null){
                 //Arreglos Unidimensionales
-                let tamaño1 = Operaciones(posicion1, entorno, errores)
+                let tamaño1 = Operaciones(posicion1, entorno, errores, simbolo)
                 if(tamaño1.tipo === TIPO_DATO.INT){
                     if(Array.isArray(temp.valor)){
                         let salida = temp.valor[tamaño1.valor]
                         if(salida != undefined){
                             temp.valor[tamaño1.valor] = valor.valor
                             entorno.actualizar(id , temp)
-                            simbolo.update(id, entornoName, temp.valor)
+                            simbolo.update(id, variable.entorno, temp.valor)
                             return null
                         }
                         errores.add("Semántico", "La posición no existe en el arreglo (U)." , expresion.linea, expresion.columna);
@@ -51,15 +52,15 @@ function AsignacionA(instruccion, entorno, errores, simbolo, entornoName){
 
             }else{
                 //Arreglos Bidimensionales
-                let tamaño1 = Operaciones(posicion1, entorno, errores)
-                let tamaño2 = Operaciones(posicion2, entorno, errores)
+                let tamaño1 = Operaciones(posicion1, entorno, errores, simbolo)
+                let tamaño2 = Operaciones(posicion2, entorno, errores, simbolo)
                 if(tamaño1.tipo === TIPO_DATO.INT && tamaño2.tipo === TIPO_DATO.INT){
                     if(Array.isArray(temp.valor)){
                         let salida = temp.valor[tamaño1.valor][tamaño2.valor]
                         if(salida != undefined){
                             temp.valor[tamaño1.valor][tamaño2.valor] = valor.valor
                             entorno.actualizar(id , temp)
-                            simbolo.update(id, entornoName, temp.valor)
+                            simbolo.update(id, variable.entorno, temp.valor)
                             return null
                         }
                         errores.add("Semántico", "La posición no existe en el arreglo (B)." , expresion.linea, expresion.columna);

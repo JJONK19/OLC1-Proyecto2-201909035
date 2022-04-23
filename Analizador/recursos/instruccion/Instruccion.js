@@ -71,6 +71,16 @@ const Instruccion = {
             tipo: TIPO_INSTRUCCION.DECLARACIONV
         }
     },
+    declaracionp: function(_tipodato, _id, _valor, _linea, _columna){
+        return {
+            tipodato: _tipodato,                //Tipado de las variables
+            id: _id,
+            valor: _valor,
+            linea: _linea,
+            columna: _columna,
+            tipo: TIPO_INSTRUCCION.DECLARACIONP
+        }
+    },
     asignacionv: function(_id, _expresion, _linea, _columna){
         return {
             id: _id,
@@ -114,14 +124,24 @@ const Instruccion = {
             columna: _columna
         }
     },
-    dmetodo: function(_nombre, _parametros, _instrucciones, _linea, _columna){
+    dmetodo: function(_nombre, _instrucciones, _linea, _columna){
         return {
-            tipo: TIPO_INSTRUCCION.DMETODO,
             nombre: _nombre,
-            parametros: _parametros,
             instrucciones: _instrucciones,
             linea: _linea,
-            columna: _columna
+            columna: _columna,
+            tipo: TIPO_INSTRUCCION.DMETODO
+        }
+    },
+    dfuncion: function(_nombre, _parametros, _return, _instrucciones, _linea, _columna){
+        return {
+            nombre: _nombre,
+            parametros: _parametros,
+            return: _return,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna,
+            tipo: TIPO_INSTRUCCION.DFUNCION
         }
     },
     llamada: function(_nombre, _valores, _linea, _columna){
@@ -137,6 +157,14 @@ const Instruccion = {
         return {
             tipo: TIPO_INSTRUCCION.PRINT,
             expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    return: function(_expresion, _linea, _columna){
+        return{
+            valor: _expresion,
+            tipo: TIPO_INSTRUCCION.RETURN,
             linea: _linea,
             columna: _columna
         }

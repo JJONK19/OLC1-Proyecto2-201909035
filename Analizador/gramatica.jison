@@ -20,6 +20,9 @@
 "true"                      return 'true';
 "false"                     return 'false';
 "new"                       return 'new';
+"void"                      return 'void';
+"return"                    return 'return';
+"run"                       return 'run';
 
 /*Caraácteres básicos*/        
 "+"                         return 'mas';
@@ -44,6 +47,8 @@
 ")"                         return 'parC';
 "["                         return 'corA';
 "]"                         return 'corC';
+"{"                         return 'llavA';
+"}"                         return 'llavC'; 
 ";"                         return 'puntocoma';
 ","                         return 'coma';
 
@@ -82,6 +87,7 @@
         //Importes
         var ListaErrores = require("./recursos/errores/ListaErrores");
         var ListaSimbolos = require("./recursos/datos/ListaSimbolos");
+        var ListaMetodos = require("./recursos/datos/ListaMetodos");
         const TIPO_OPERACION = require('./recursos/enum/TipoOperacion');
         const TIPO_VALOR = require('./recursos/enum/TipoValor');
         const TIPO_DATO = require('./recursos/enum/TipoDato');
@@ -90,6 +96,7 @@
         //Instrucciones
         var lista = new ListaErrores();
         var simbolos = new ListaSimbolos();
+        var metodos = new ListaMetodos();
 
 %}
 
@@ -114,11 +121,13 @@ INICIO: SENTENCIAS EOF
              var salida = {
                 lerrores: lista,
                 instrucciones: $1,
-                lsimbolos: simbolos
+                lsimbolos: simbolos,
+                lmetodos: metodos
              }
              //Reiniciar la lista de Errores
              lista = new ListaErrores();
              simbolos = new ListaSimbolos();
+             metodos = new ListaMetodos();
              return salida;
         }
 ;         
@@ -142,15 +151,19 @@ SENTENCIA: DVARIABLES
         {
                 $$ = $1;
         }
-        | AVARIABLES
-        {
-                $$ = $1;
-        }
         | DARREGLOS
         {
                 $$ = $1;
         }
-        | AARREGLOS
+        | DMETODO
+        {
+                $$ = $1;
+        }
+        | DFUNCION
+        {
+                $$ = $1;
+        }
+        | RUN
         {
                 $$ = $1;
         }
@@ -253,6 +266,130 @@ VALORES: VALORES coma corA LISTAVALORES corC
                 $$ = [$2];
         }
 ;
+//Declarar Metodos----------------------------------------------------------------------------
+DMETODO: identificador parA parC llavA INSTRUCCIONES llavC 
+        {
+                $$ = INSTRUCCION.dmetodo($1, $5, this._$.first_line, this._$.first_column+1)
+        }
+        |identificador parA parC dospuntos void llavA INSTRUCCIONES llavC
+        {
+                $$ = INSTRUCCION.dmetodo($1, $7, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Declarar Funciones----------------------------------------------------------------------------
+DFUNCION: identificador parA parC dospuntos TIPO llavA INSTRUCCIONES llavC
+        {
+                $$ = INSTRUCCION.dfuncion($1, null, $5, $7, this._$.first_line, this._$.first_column+1)
+        }
+        |identificador parA PARAMETROS parC dospuntos TIPO llavA INSTRUCCIONES llavC
+        {
+                $$ = INSTRUCCION.dfuncion($1, $3, $6, $8, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+PARAMETROS: PARAMETROS coma PARAMETRO {
+                $1.push($3); 
+                $$=$1
+        }
+        | PARAMETRO 
+        {
+                $$=[$1]
+        }
+;
+
+PARAMETRO: TIPO identificador 
+        {
+                $$= INSTRUCCION.declaracionp($1, $2, null, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//LLamadas--------------------------------------------------------------------------------
+LLAMADA:        identificador parA parC puntocoma 
+                {
+                        $$= INSTRUCCION.llamada($1, null, this._$.first_line, this._$.first_column+1)
+                }
+                | identificador parA PARAMETROS parC puntocoma {
+                        $$= INSTRUCCION.llamada($1, $3, this._$.first_line, this._$.first_column+1)
+                }
+;
+//Instrucciones---------------------------------------------------------------------------
+INSTRUCCIONES: INSTRUCCIONES INSTRUCCION
+        {
+                //Insertar a la lista de instrucciones
+                $1.push($2); 
+                //Retornar la lista de instrucciones
+                $$=$1
+        }
+
+        | INSTRUCCION
+        {
+                //Lista de Instrucciones
+                $$ = [$1];
+        }
+;
+
+INSTRUCCION: DVARIABLES
+        {
+                $$ = $1;
+        }
+        | AVARIABLES
+        {
+                $$ = $1;
+        }
+        | DARREGLOS
+        {
+                $$ = $1;
+        }
+        | AARREGLOS
+        {
+                $$ = $1;
+        }
+        | RETURN
+        {
+                $$ = $1;
+        }
+        | LLAMADA
+        {
+                $$ = $1;
+        }
+        | error puntocoma
+        {
+                lista.add("Sintáctico", "Token Inesperado " + $1 , @1.first_line, @1.first_column + 1);
+        }
+;
+//Funcion Return---------------------------------------------------------------------------------------
+RETURN: return puntocoma 
+        {
+                $$= INSTRUCCION.return(null, this._$.first_line, this._$.first_column+1)
+        }
+        | return EXPRESION puntocoma 
+        {
+                $$= INSTRUCCION.return($2, this._$.first_line, this._$.first_column+1)
+        }
+; 
+
+//Funcion Run---------------------------------------------------------------------------------------
+RUN: run identificador parA parC puntocoma
+        {
+                $$= INSTRUCCION.run($2, null, this._$.first_line, this._$.first_column+1)
+        }
+        | run identificador parA ENTRADAS parC puntocoma 
+        {
+                $$= INSTRUCCION.run($2, $4, this._$.first_line, this._$.first_column+1)
+        }
+; 
+
+ENTRADAS: ENTRADAS coma EXPRESION 
+        {
+                $1.push($3); 
+                $$=$1
+        }
+        | EXPRESION 
+        {
+                $$=[$1]
+        }
+;
 
 //Tipos-----------------------------------------------------------------------------------
 TIPO: int       {$$ = TIPO_DATO.INT}
@@ -292,6 +429,7 @@ PRIMITIVO: entero
                 $$ = INSTRUCCION.valor($1, TIPO_VALOR.IDENTIFICADOR, this._$.first_line, this._$.first_column+1);
         }
 ;
+
 //Declaracion de expresiones--------------------------------------------------------------------------
 EXPRESION: EXPRESION mas EXPRESION
         {
@@ -413,6 +551,10 @@ EXPRESION: EXPRESION mas EXPRESION
         | identificador corA EXPRESION corC corA EXPRESION corC
         {
                 $$ = INSTRUCCION.valorv($1, $3, $6, this._$.first_line, this._$.first_column+1);
+        }
+        | LLAMADA_METODO
+        {
+                $$ = $1
         }
 ;
 

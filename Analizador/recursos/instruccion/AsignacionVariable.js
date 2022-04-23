@@ -6,15 +6,16 @@ function Asignacion(instruccion, entorno, errores, simbolo, entornoName){
     const id = instruccion.id               
     const buscar = entorno.buscarSimboloGlobal(id)
     if(buscar){
-        var valor = Operacion(instruccion.expresion, entorno, errores)
-        var variable = entorno.getSimbolo(id)
+        var valor = Operacion(instruccion.expresion, entorno, errores, simbolo)
+        var temp = entorno.getSimboloE(id)
+        let variable = temp.resultado
         let antiguo = variable.tipo
         let nuevo = valor.tipo
         
         if(antiguo===nuevo){
             variable.valor = valor.valor
             entorno.actualizar(id , variable)
-            simbolo.update(id, entornoName, valor.valor)
+            simbolo.update(id, temp.entorno, valor.valor)
             return null
         }
         errores.add("Semántico", `${id} es de tipo ${antiguo}, no de tipo ${nuevo}.` , instruccion.linea, instruccion.columna);

@@ -1,10 +1,13 @@
 //La clase entorno almacena la tabla de simbolos y metodos de la ejecución actual
 //Funciona como una lista simple enlazada hacia arriba
 class Entorno {
-    constructor(padre) {
-        this.padre = padre
+    constructor(padre, nombre) {
+        this.nombre = nombre
+        this.anterior = padre
         this.tablaSimbolos = new Map()
         this.tablaMetodos = new Map()
+        this.retorno = ""
+        
     }
 
     //Métodos para añadir-----------------------------------------------------------------------------
@@ -25,6 +28,19 @@ class Entorno {
             var resultado = entorno.tablaSimbolos.get(nombre.toLowerCase())
             if (resultado != null) {
                 return resultado
+            }
+        }
+        return null
+    }
+
+    getSimboloE(nombre) {
+        for (let entorno = this; entorno != null; entorno = entorno.anterior) {
+            var resultado = entorno.tablaSimbolos.get(nombre.toLowerCase())
+            if (resultado != null) {
+                return {
+                    resultado: resultado,
+                    entorno: entorno.nombre
+                }
             }
         }
         return null
@@ -84,6 +100,10 @@ class Entorno {
             }
         }
         return false
+    }
+
+    setRetorno(tipo){
+        this.retorno = tipo 
     }
 
 }

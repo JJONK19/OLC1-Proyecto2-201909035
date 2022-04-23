@@ -36,6 +36,7 @@
                     <th>Identificador</th>
                     <th>Clase</th>
                     <th>Tipo</th>
+                    <th>Valor</th>
                     <th>Entorno</th>
                     <th>Línea</th>
                     <th>Columna</th>
@@ -45,9 +46,20 @@
                     <td>{{simbolo.id}}</td>
                     <td>Variable</td>
                     <td>{{simbolo.tipo}}</td>
+                    <td>{{simbolo.valor}}</td>
                     <td>{{simbolo.entorno}}</td>
                     <td>{{simbolo.linea}}</td>
                     <td>{{simbolo.columna}}</td>
+                </tr>
+                <tr *ngFor="let metodo of salidaM; let i = index">
+                    <td>{{i + 1}}</td>
+                    <td>{{metodo.id}}</td>
+                    <td>Método</td>
+                    <td>{{metodo.tipo}}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>{{metodo.linea}}</td>
+                    <td>{{metodo.columna}}</td>
                 </tr>
             </table>
         </div>

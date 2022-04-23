@@ -17,8 +17,8 @@ function DeclararArreglos(instruccion, entorno, errores, simbolo, entornoName){
         if(instruccion.tipo1 === instruccion.tipo2){
             if(instruccion.tamaño2 != null){
                 //Arreglos Bidemensionales
-                let tamaño1 = Operacion(instruccion.tamaño1, entorno, errores)
-                let tamaño2 = Operacion(instruccion.tamaño2, entorno, errores)
+                let tamaño1 = Operacion(instruccion.tamaño1, entorno, errores, simbolo)
+                let tamaño2 = Operacion(instruccion.tamaño2, entorno, errores, simbolo)
                 if(tamaño1.tipo === TIPO_DATO.INT && tamaño2.tipo === TIPO_DATO.INT){
                     //Crear el arreglo
                     var valor = null
@@ -51,7 +51,7 @@ function DeclararArreglos(instruccion, entorno, errores, simbolo, entornoName){
 
             }else{
                 //Arreglos Unidimensionales
-                let tamaño1 = Operacion(instruccion.tamaño1, entorno, errores)
+                let tamaño1 = Operacion(instruccion.tamaño1, entorno, errores, simbolo)
                 if(tamaño1.tipo === TIPO_DATO.INT){
                     //Crear el arreglo
                     var valor = null
@@ -98,7 +98,7 @@ function DeclararArreglos(instruccion, entorno, errores, simbolo, entornoName){
                     errores.add("Semántico", `Los valores ingresados en el arreglo siguen un formato de dos dimensiones.` , instruccion.linea, instruccion.columna);
                     return `Los valores ingresados en el arreglo siguen un formato de dos dimensiones.`
                 }else{
-                    let resultado = Operacion(temp, entorno, errores)
+                    let resultado = Operacion(temp, entorno, errores, simbolo)
                     if(resultado.tipo === instruccion.tipo1){
                         valor.push(resultado.valor)
                     }else{
@@ -134,7 +134,7 @@ function DeclararArreglos(instruccion, entorno, errores, simbolo, entornoName){
                             errores.add("Semántico", `Los valores ingresados en el arreglo siguen un formato de tres dimensiones.` , instruccion.linea, instruccion.columna);
                             return `Los valores ingresados en el arreglo siguen un formato de tres dimensiones.`
                         }else{
-                            let resultado = Operacion(tempo, entorno, errores)
+                            let resultado = Operacion(tempo, entorno, errores, simbolo)
                             if(resultado.tipo === instruccion.tipo1){
                                 add.push(resultado.valor)
                             }else{
