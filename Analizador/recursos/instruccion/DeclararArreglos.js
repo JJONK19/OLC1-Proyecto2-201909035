@@ -160,6 +160,32 @@ function DeclararArreglos(instruccion, entorno, errores, simbolo, entornoName){
             simbolo.add(instruccion.id, valor, instruccion.tipo1, entornoName, instruccion.linea, instruccion.columna)
             return null
         }   
+    }else if(InstruccionTipo === TIPO_INSTRUCCION.DECLARACIONA3){ //Char ARRAY
+        const dimension = instruccion.dimension
+        if(dimension === 1){
+            if(instruccion.tipo1 == TIPO_DATO.CHAR && instruccion.expresion.tipo == TIPO_INSTRUCCION.TOCHAR){
+                let resultado = Operacion(instruccion.expresion, entorno, errores, simbolo)
+                //Crear el arreglo
+                var valor = resultado.valor
+                if(Array.isArray(valor)){
+                    //Buscar Simbolo 
+                    const nuevo = new Simbolo(instruccion.id, valor, instruccion.tipo1, instruccion.linea, instruccion.columna)
+                    if(entorno.buscarSimbolo(nuevo.id) == true){
+                        errores.add("Semántico", `${nuevo.id} no puede ser declarado porque ya existe.` , instruccion.linea, instruccion.columna);
+                        return `${nuevo.id} no puede ser declarado porque ya existe.`
+                    }
+                    entorno.addSimbolo(nuevo.id, nuevo)
+                    simbolo.add(instruccion.id, valor, instruccion.tipo1, entornoName, instruccion.linea, instruccion.columna)
+                    return null
+                }else{
+                    errores.add("Semántico", `Declaración de arreglo erronea. Verifique los tipos y la entrada` , instruccion.linea, instruccion.columna);
+                    return `Declaración de arreglo erronea. Verifique los tipos y la entrada.`
+                }
+            }else{
+                errores.add("Semántico", `Declaración de arreglo erronea. Verifique los tipos y la entrada` , instruccion.linea, instruccion.columna);
+                return `Declaración de arreglo erronea. Verifique los tipos y la entrada.`
+            }
+        }
     }
 
 }

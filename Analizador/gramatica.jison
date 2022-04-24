@@ -21,7 +21,16 @@
 "false"                     return 'false';
 "new"                       return 'new';
 "void"                      return 'void';
+"print"                     return 'print';
+"println"                   return 'println';
 "return"                    return 'return';
+"toLower"                   return 'toLower';
+"toUpper"                   return 'toUpper';
+"round"                     return 'round';
+"length"                    return 'length';
+"typeof"                    return 'typeof';
+"tostring"                  return 'tostring';
+"tochararray"               return 'tochar';
 "run"                       return 'run';
 
 /*Caraácteres básicos*/        
@@ -233,6 +242,10 @@ UDIMENSION: TIPO identificador corA corC asignar new TIPO corA EXPRESION corC pu
         {
                 $$= INSTRUCCION.declaraciona2(1, $1, $2, $7, null, this._$.first_line, this._$.first_column+1);
         }
+        | TIPO identificador corA corC asignar EXPRESION puntocoma
+        {
+                $$= INSTRUCCION.declaraciona3(1, $1, $2, $6, null, this._$.first_line, this._$.first_column+1);
+        }
 ;
 
 BDIMENSION: TIPO identificador corA corC corA corC asignar new TIPO corA EXPRESION corC corA EXPRESION corC puntocoma
@@ -243,6 +256,7 @@ BDIMENSION: TIPO identificador corA corC corA corC asignar new TIPO corA EXPRESI
         {
                 $$= INSTRUCCION.declaraciona2(2, $1, $2, $9, this._$.first_line, this._$.first_column+1);
         }
+        
 ;
 
 LISTAVALORES: LISTAVALORES coma PRIMITIVO
@@ -269,11 +283,19 @@ VALORES: VALORES coma corA LISTAVALORES corC
 //Declarar Metodos----------------------------------------------------------------------------
 DMETODO: identificador parA parC llavA INSTRUCCIONES llavC 
         {
-                $$ = INSTRUCCION.dmetodo($1, $5, this._$.first_line, this._$.first_column+1)
+                $$ = INSTRUCCION.dmetodo($1, null, $5, this._$.first_line, this._$.first_column+1)
         }
         |identificador parA parC dospuntos void llavA INSTRUCCIONES llavC
         {
-                $$ = INSTRUCCION.dmetodo($1, $7, this._$.first_line, this._$.first_column+1)
+                $$ = INSTRUCCION.dmetodo($1, null, $7, this._$.first_line, this._$.first_column+1)
+        }
+        | identificador parA PARAMETROS parC llavA INSTRUCCIONES llavC 
+        {
+                $$ = INSTRUCCION.dmetodo($1, $3, $6, this._$.first_line, this._$.first_column+1)
+        }
+        |identificador parA PARAMETROS parC dospuntos void llavA INSTRUCCIONES llavC
+        {
+                $$ = INSTRUCCION.dmetodo($1, $3, $8, this._$.first_line, this._$.first_column+1)
         }
 ;
 
@@ -309,8 +331,18 @@ LLAMADA:        identificador parA parC puntocoma
                 {
                         $$= INSTRUCCION.llamada($1, null, this._$.first_line, this._$.first_column+1)
                 }
-                | identificador parA PARAMETROS parC puntocoma {
+                | identificador parA ENTRADAS parC puntocoma {
                         $$= INSTRUCCION.llamada($1, $3, this._$.first_line, this._$.first_column+1)
+                }
+;
+
+//Obtener un retorno (usado paa expresiones)-------------------------------------------------------
+LLAMADAS:        identificador parA parC 
+                {
+                        $$= INSTRUCCION.llamadaa($1, null, this._$.first_line, this._$.first_column+1)
+                }
+                | identificador parA ENTRADAS parC {
+                        $$= INSTRUCCION.llamadaa($1, $3, this._$.first_line, this._$.first_column+1)
                 }
 ;
 //Instrucciones---------------------------------------------------------------------------
@@ -353,6 +385,10 @@ INSTRUCCION: DVARIABLES
         {
                 $$ = $1;
         }
+        | PRINT
+        {
+                $$ = $1;
+        }
         | error puntocoma
         {
                 lista.add("Sintáctico", "Token Inesperado " + $1 , @1.first_line, @1.first_column + 1);
@@ -368,6 +404,66 @@ RETURN: return puntocoma
                 $$= INSTRUCCION.return($2, this._$.first_line, this._$.first_column+1)
         }
 ; 
+
+//Funcion Print---------------------------------------------------------------------------------------
+PRINT: print parA EXPRESION parC puntocoma
+        {
+                $$= INSTRUCCION.print($3, this._$.first_line, this._$.first_column+1)
+        }
+        | println parA EXPRESION parC puntocoma
+        {
+                $$= INSTRUCCION.println($3, this._$.first_line, this._$.first_column+1)
+        }
+; 
+
+//Funcion Upper---------------------------------------------------------------------------------------
+UPPER: toUpper parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.upper($3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Funcion Lower---------------------------------------------------------------------------------------
+LOWER: toLower parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.lower($3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Funcion Round---------------------------------------------------------------------------------------
+ROUND: round parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.round($3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Funcion Lenth---------------------------------------------------------------------------------------
+LENGTH: length parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.length($3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Funcion TypeOf---------------------------------------------------------------------------------------
+TYPEOF: typeof parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.typeof($3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Funcion toString---------------------------------------------------------------------------------------
+TOSTRING: tostring parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.tostring($3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Funcion toString---------------------------------------------------------------------------------------
+TOCHAR: tochar parA EXPRESION parC 
+        {
+                $$= INSTRUCCION.tochar($3, this._$.first_line, this._$.first_column+1)
+        }
+;
 
 //Funcion Run---------------------------------------------------------------------------------------
 RUN: run identificador parA parC puntocoma
@@ -552,9 +648,37 @@ EXPRESION: EXPRESION mas EXPRESION
         {
                 $$ = INSTRUCCION.valorv($1, $3, $6, this._$.first_line, this._$.first_column+1);
         }
-        | LLAMADA_METODO
+        | LLAMADAS
         {
-                $$ = $1
+                $$ = $1;
+        }
+        | UPPER
+        {
+                $$ = $1;
+        }
+        | LOWER
+        {
+                $$ = $1;
+        }
+        | ROUND
+        {
+                $$ = $1;
+        }
+        | LENGTH
+        {
+                $$ = $1;
+        }
+        | TYPEOF
+        {
+                $$ = $1;
+        }
+        | TOSTRING
+        {
+                $$ = $1;
+        }
+        | TOCHAR
+        {
+                $$ = $1;
         }
 ;
 

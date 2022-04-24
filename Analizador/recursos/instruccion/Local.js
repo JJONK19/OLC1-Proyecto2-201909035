@@ -10,34 +10,41 @@ const Return = require("./Return")
 
 function Local(instrucciones, entorno, errores, simbolo){
     var salida = ""
-    instrucciones.forEach(instruccion=>{
-        if (instruccion.tipo === TIPO_INSTRUCCION.DECLARACIONV){
-            var consola = DeclararVariable(instruccion, entorno, errores, simbolo, entorno.nombre)
+    let ban = 0;
+    for(let i = 0; i < instrucciones.length; i++){
+        if(ban == 1){
+            break;
+        }
+
+        if (instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONV){
+            var consola = DeclararVariable(instrucciones[i], entorno, errores, simbolo, entorno.nombre)
             if(consola != null){
                 salida += consola + "\n"
             }
         }
-        else if (instruccion.tipo === TIPO_INSTRUCCION.ASIGNACIONV){
-            var consola = AsignacionVariable(instruccion, entorno, errores, simbolo, entorno.nombre)
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.ASIGNACIONV){
+            var consola = AsignacionVariable(instrucciones[i], entorno, errores, simbolo, entorno.nombre)
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-        else if (instruccion.tipo === TIPO_INSTRUCCION.DECLARACIONA1 || instruccion.tipo === TIPO_INSTRUCCION.DECLARACIONA2){
-            var consola = DeclararArreglos(instruccion, entorno, errores, simbolo, entorno.nombre)
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA1 || instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA2||
+            instrucciones[i].tipo === TIPO_INSTRUCCION.DECLARACIONA3){
+            var consola = DeclararArreglos(instrucciones[i], entorno, errores, simbolo, entorno.nombre)
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-        else if (instruccion.tipo === TIPO_INSTRUCCION.ASIGNACIONA){
-            var consola = AsignacionArreglos(instruccion, entorno, errores, simbolo, entorno.nombre)
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.ASIGNACIONA){
+            var consola = AsignacionArreglos(instrucciones[i], entorno, errores, simbolo, entorno.nombre)
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-        else if (instruccion.tipo === TIPO_INSTRUCCION.LLAMADA){
+
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.LLAMADA){
             const Run = require('./Run')
-            var consola = Run(instruccion, entorno, errores, simbolo)
+            var consola = Run(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
                 if(typeof(consola) == 'object'){
                     salida += consola.salida +'\n'
@@ -46,33 +53,60 @@ function Local(instrucciones, entorno, errores, simbolo){
                 }
             }
         }
-        else if (instruccion.tipo === TIPO_INSTRUCCION.RETURN){
-            var consola = Return(instruccion, entorno, errores, simbolo)
+
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.LLAMADAA){
+            const Run = require('./Run')
+            var consola = Run(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
-                if(typeof(consola) == 'object'){
-                    return{
+                if(typeof(consola) === 'object'){
+                    let objeto = {
                         resultado: consola,
                         salida: salida
                     }
+                    salida = objeto;
+                    return salida
+                }else{
+                    salida += consola +'\n'
+                }
+            }
+        }
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.RETURN){
+            var consola = Return(instrucciones[i], entorno, errores, simbolo)
+            ban = 1;
+            if(consola != null){
+                if(typeof(consola) === 'object'){
+                    let objeto = {
+                        resultado: consola,
+                        salida: salida
+                    }
+                    salida = objeto;
+                    return salida
                 }else{
                     salida += consola +'\n'
                     return salida
                 }
             }
         }
-        else if(instruccion.tipo === TIPO_INSTRUCCION.WHILE){
-            var consola = While(instruccion, entorno, errores, simbolo)
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.WHILE){
+            var consola = While(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-        else if(instruccion.tipo === TIPO_INSTRUCCION.PRINT){
-            var consola = Print(instruccion, entorno)
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.PRINT){
+            var consola = Print(instrucciones[i], entorno, errores, simbolo)
+            if(consola != null){
+                salida += consola
+            }
+        }
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.PRINTLN){
+            var consola = Print(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
                 salida += consola +'\n'
             }
         }
-    })
+    }
+    
     return salida
 }
 

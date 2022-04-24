@@ -3,7 +3,7 @@
 const Metodo = require("../datos/Metodo")
 
 function DeclararMetodo(instruccion, entorno, errores, metodo){
-    const nuevo = new Metodo(instruccion.nombre, null, instruccion.instrucciones, null, instruccion.linea, instruccion.columna)
+    const nuevo = new Metodo(instruccion.nombre, instruccion.parametros, instruccion.instrucciones, null, instruccion.linea, instruccion.columna)
 
     if(entorno.buscarSimbolo(nuevo.id) == true){
         errores.add("Semántico", `${nuevo.id} es el nombre de una variable. No puede ser asignado al método.` , instruccion.linea, instruccion.columna);

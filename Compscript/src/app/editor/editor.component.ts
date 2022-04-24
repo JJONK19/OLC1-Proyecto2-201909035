@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
 import { AnalizarService } from 'src/app/servicios/analizar.service';
 
 @Component({

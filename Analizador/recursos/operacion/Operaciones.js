@@ -63,8 +63,29 @@ function Operaciones(expresion, entorno, errores, simbolo){
         return decremento(expresion.izquierda, expresion.derecha, entorno, errores, simbolo)
     }
     //LLamadas a metodos
-    else if (expresion.tipo === TIPO_INSTRUCCION.LLAMADA){
+    else if (expresion.tipo === TIPO_INSTRUCCION.LLAMADAA){
         return llamada(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.UPPER){
+        return upper(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.LOWER){
+        return lower(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.ROUND){
+        return round(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.LENGTH){
+        return length(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.TYPEOF){
+        return type(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.TOSTRING){
+        return tostring(expresion, entorno, errores, simbolo)
+    }
+    else if (expresion.tipo === TIPO_INSTRUCCION.TOCHAR){
+        return tochar(expresion, entorno, errores, simbolo)
     }
     
 
@@ -948,6 +969,169 @@ function decremento(_izquierda, _derecha, entorno, errores, simbolo){
         linea: null,
         columna: null
     }
+}
+
+function upper(expresion, entorno, errores, simbolo){
+    const valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.tipo == TIPO_DATO.STRING){
+        let resultado = valor.valor.toUpperCase()
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.STRING,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        errores.add("Semántico", "La función toUpper solo recibe valores de String. Tipos Invalidos."  , expresion.linea, expresion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: null,
+            columna: null
+        }
+    }
+}
+
+function lower(expresion, entorno, errores, simbolo){
+    const valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.tipo == TIPO_DATO.STRING){
+        let resultado = valor.valor.toLowerCase()
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.STRING,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        errores.add("Semántico", "La función toLower solo recibe valores de String. Tipos Invalidos."  , expresion.linea, expresion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: null,
+            columna: null
+        }
+    }
+
+}
+
+function round(expresion, entorno, errores, simbolo){
+    const valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.tipo == TIPO_DATO.DOUBLE || valor.tipo == TIPO_DATO.INT){
+        let resultado = Math.round(valor.valor)
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.DOUBLE,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        errores.add("Semántico", "La función Round solo recibe valores númericos. Tipos Invalidos."  , expresion.linea, expresion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: null,
+            columna: null
+        }
+    }
+
+}
+
+function length(expresion, entorno, errores, simbolo){
+    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.tipo == TIPO_DATO.STRING || Array.isArray(valor.valor)){
+        let resultado = valor.valor.length
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.INT,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        errores.add("Semántico", "La función Round solo recibe Strings o Arreglos. Tipos Invalidos."  , expresion.linea, expresion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: null,
+            columna: null
+        }
+    }
+
+}
+
+function type(expresion, entorno, errores, simbolo){
+    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(Array.isArray(valor.valor)){
+        let resultado = "ARRAY"
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.STRING,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        let resultado = valor.tipo
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.STRING,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }
+
+}
+
+function tostring(expresion, entorno, errores, simbolo){
+    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(!Array.isArray(valor.valor)){
+        if(valor.tipo == TIPO_DATO.INT || valor.tipo == TIPO_DATO.DOUBLE || valor.tipo == TIPO_DATO.BOOLEAN){
+            let resultado = valor.valor.toString()
+            return {
+                valor: resultado,
+                tipo: TIPO_DATO.STRING,
+                linea: expresion.linea,
+                columna: expresion.columna
+            }
+        }else{
+            errores.add("Semántico", "La función toString solo recibe valores númericos o booleanos. Tipos Invalidos."  , expresion.linea, expresion.columna);
+            return {
+                valor: null,
+                tipo: "ERROR",
+                linea: null,
+                columna: null
+            }    
+        }
+    }else{
+        errores.add("Semántico", "La función toString solo recibe valores númericos o booleanos. Tipos Invalidos."  , expresion.linea, expresion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: null,
+            columna: null
+        }
+    }
+
+}
+
+function tochar(expresion, entorno, errores, simbolo){
+    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.tipo == TIPO_DATO.STRING){
+        let resultado = [...valor.valor]
+        return {
+            valor: resultado,
+            tipo: TIPO_DATO.CHAR,
+            linea: expresion.linea,
+            columna: expresion.columna
+        }
+    }else{
+        errores.add("Semántico", "La función toChar solo recibe cadenas. Tipos Invalidos."  , expresion.linea, expresion.columna);
+        return {
+            valor: null,
+            tipo: "ERROR",
+            linea: null,
+            columna: null
+        }    
+    }
+
 }
 
 module.exports = Operaciones

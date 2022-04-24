@@ -37,8 +37,8 @@ function Run(instruccion, entorno, errores, simbolo){
                     if(error){
                         return salida
                     }
-                    var ejecutar = Local(buscar.instrucciones, entornoLocal, errores, simbolo)
-                    if(consola != null){
+                    let ejecutar = Local(buscar.instrucciones, entornoLocal, errores, simbolo)
+                    if(ejecutar != null){
                         if(typeof(ejecutar) == 'object'){
                             return{
                                 resultado: ejecutar.resultado,
@@ -57,8 +57,8 @@ function Run(instruccion, entorno, errores, simbolo){
                 }
             }
             else {
-                var ejecutar = Local(buscar.instrucciones, entornoLocal, errores, simbolo)
-                if(consola != null){
+                let ejecutar = Local(buscar.instrucciones, entornoLocal, errores, simbolo)
+                if(ejecutar != null){
                     if(typeof(ejecutar) == 'object'){
                         return{
                             resultado: ejecutar.resultado,

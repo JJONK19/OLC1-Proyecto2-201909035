@@ -115,6 +115,17 @@ const Instruccion = {
             tipo: TIPO_INSTRUCCION.DECLARACIONA2
         }
     },
+    declaraciona3: function(_dimension, _tipo1, _id, expresion, _linea, _columna){
+        return {
+            dimension: _dimension,
+            tipo1: _tipo1,                
+            id: _id,
+            expresion: expresion,     
+            linea: _linea,
+            columna: _columna,
+            tipo: TIPO_INSTRUCCION.DECLARACIONA3
+        }
+    },
     while: function(_expresion, _instrucciones, _linea, _columna){
         return {
             tipo: TIPO_INSTRUCCION.WHILE,
@@ -124,9 +135,10 @@ const Instruccion = {
             columna: _columna
         }
     },
-    dmetodo: function(_nombre, _instrucciones, _linea, _columna){
+    dmetodo: function(_nombre,  _parametros, _instrucciones, _linea, _columna){
         return {
             nombre: _nombre,
+            parametros: _parametros,
             instrucciones: _instrucciones,
             linea: _linea,
             columna: _columna,
@@ -153,9 +165,82 @@ const Instruccion = {
             columna: _columna
         }
     },
+    llamadaa: function(_nombre, _valores, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.LLAMADAA,
+            nombre: _nombre,
+            valores: _valores,
+            linea: _linea,
+            columna: _columna
+        }
+    },
     print: function(_expresion, _linea, _columna){
         return {
             tipo: TIPO_INSTRUCCION.PRINT,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    println: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.PRINTLN,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    upper: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.UPPER,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    lower: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.LOWER,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    round: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.ROUND,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    length: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.LENGTH,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    typeof: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.TYPEOF,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    tostring: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.TOSTRING,
+            expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    tochar: function(_expresion, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.TOCHAR,
             expresion: _expresion,
             linea: _linea,
             columna: _columna
