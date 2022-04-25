@@ -24,7 +24,12 @@ const TIPO_INSTRUCCION = {
     TYPEOF: 'TYPEOF',
     TOSTRING: 'TOSTRING',
     TOCHAR: 'TOCHAR',
-    LOWER: 'LOWER'
+    LOWER: 'LOWER',
+    //Sentencias de control
+    IF: 'IF',
+    SWITCH: 'SWITCH',
+    BREAK: 'BREAK'
+    
 }
 
 module.exports = TIPO_INSTRUCCION

@@ -32,6 +32,12 @@
 "tostring"                  return 'tostring';
 "tochararray"               return 'tochar';
 "run"                       return 'run';
+"if"                        return 'if';
+"else"                      return 'else';
+"switch"                    return 'switch';
+"case"                      return 'case';
+"default"                   return 'default';
+"break"                     return 'break';
 
 /*Caraácteres básicos*/        
 "+"                         return 'mas';
@@ -389,9 +395,70 @@ INSTRUCCION: DVARIABLES
         {
                 $$ = $1;
         }
+        | IF
+        {
+                $$ = $1;
+        }
+        | SWITCH
+        {
+                $$ = $1;
+        }
+        | BREAK
+        {
+                $$ = $1;
+        }
         | error puntocoma
         {
                 lista.add("Sintáctico", "Token Inesperado " + $1 , @1.first_line, @1.first_column + 1);
+        }
+;
+//IF------------------------------------------------------------------------------------------
+IF: if parA EXPRESION parC llavA INSTRUCCIONES llavC 
+        {
+                $$ = INSTRUCCION.si($3, $6, null, this._$.first_line, this._$.first_column+1)
+        }
+        |if parA EXPRESION parC llavA INSTRUCCIONES llavC else llavA INSTRUCCIONES llavC 
+        {
+                $$ = INSTRUCCION.si($3, $6, $10, this._$.first_line, this._$.first_column+1)
+        }
+        |if parA EXPRESION parC llavA INSTRUCCIONES llavC else IF 
+        {
+                $$ = INSTRUCCION.si($3, $6, $9, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Switch------------------------------------------------------------------------------------------
+SWITCH: switch parA EXPRESION parC llavA CASES DEFAULT llavC 
+        {
+                $$ = INSTRUCCION.switch($3, $6, $7, this._$.first_line, this._$.first_column+1)
+        }
+        | switch parA EXPRESION parC llavA CASES llavC 
+        {
+                $$ = INSTRUCCION.switch($3, $6, null, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+CASES:  CASES CASO
+        {
+                $1.push($2); 
+                $$=$1;
+        }
+        
+        | CASO
+        {
+                $$ = [$1];
+        }
+;
+
+CASO: case EXPRESION dospuntos INSTRUCCIONES
+        {
+                $$ = INSTRUCCION.case($2, $4, this._$.first_line, this._$.first_column+1)
+        }
+;
+        
+DEFAULT:  default dospuntos INSTRUCCIONES
+        {
+                 $$ = INSTRUCCION.default(null, $3, this._$.first_line, this._$.first_column+1)
         }
 ;
 //Funcion Return---------------------------------------------------------------------------------------
@@ -403,7 +470,14 @@ RETURN: return puntocoma
         {
                 $$= INSTRUCCION.return($2, this._$.first_line, this._$.first_column+1)
         }
-; 
+;
+
+//Funcion Break---------------------------------------------------------------------------------------
+BREAK: break puntocoma 
+        {
+                $$= INSTRUCCION.break(this._$.first_line, this._$.first_column+1)
+        }
+;
 
 //Funcion Print---------------------------------------------------------------------------------------
 PRINT: print parA EXPRESION parC puntocoma

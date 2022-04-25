@@ -126,6 +126,42 @@ const Instruccion = {
             tipo: TIPO_INSTRUCCION.DECLARACIONA3
         }
     },
+    si: function(condicion, _true, _false, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.IF,
+            condicion: condicion,
+            true: _true,
+            false: _false,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    switch: function(valor, casos, def, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.SWITCH,
+            valor: valor,
+            casos: casos,
+            default: def,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    case: function(valor, instrucciones, _linea, _columna){
+        return {
+            valor: valor,
+            instrucciones: instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    default: function(valor, instrucciones, _linea, _columna){
+        return {
+            valor: null,
+            instrucciones: instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },
     while: function(_expresion, _instrucciones, _linea, _columna){
         return {
             tipo: TIPO_INSTRUCCION.WHILE,
@@ -242,6 +278,13 @@ const Instruccion = {
         return {
             tipo: TIPO_INSTRUCCION.TOCHAR,
             expresion: _expresion,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    break: function( _linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.BREAK,
             linea: _linea,
             columna: _columna
         }

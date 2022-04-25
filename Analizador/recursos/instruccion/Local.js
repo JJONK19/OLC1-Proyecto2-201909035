@@ -4,6 +4,8 @@ const AsignacionVariable = require("./AsignacionVariable")
 const AsignacionArreglos = require("./AsignacionArreglo")
 const DeclararVariable = require("./DeclararVariable")
 const DeclararArreglos = require("./DeclararArreglos")
+const Si = require("./Si")
+const Switch = require("./Switch")
 const While = require("./While")
 const Print = require("./Print")
 const Return = require("./Return")
@@ -75,6 +77,7 @@ function Local(instrucciones, entorno, errores, simbolo){
             ban = 1;
             if(consola != null){
                 if(typeof(consola) === 'object'){
+                    salida += consola.salida +'\n'
                     let objeto = {
                         resultado: consola,
                         salida: salida
@@ -84,6 +87,43 @@ function Local(instrucciones, entorno, errores, simbolo){
                 }else{
                     salida += consola +'\n'
                     return salida
+                }
+            }
+        }
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.BREAK){
+            ban = 1;
+        }
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.IF){
+            var consola = Si(instrucciones[i], entorno, errores, simbolo)
+            if(consola != null){
+                if(typeof(consola) === 'object'){
+                    ban = 1;
+                    salida += consola.salida +'\n'
+                    let objeto = {
+                        resultado: consola,
+                        salida: salida
+                    }
+                    salida = objeto;
+                    return salida
+                }else{
+                    salida += consola +'\n'
+                }
+            }
+        }
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.SWITCH){
+            var consola = Switch(instrucciones[i], entorno, errores, simbolo)
+            if(consola != null){
+                if(typeof(consola) === 'object'){
+                    ban = 1;
+                    salida += consola.salida +'\n'
+                    let objeto = {
+                        resultado: consola,
+                        salida: salida
+                    }
+                    salida = objeto;
+                    return salida
+                }else{
+                    salida += consola +'\n'
                 }
             }
         }
