@@ -7,6 +7,9 @@ function Asignacion(instruccion, entorno, errores, simbolo, entornoName){
     const buscar = entorno.buscarSimboloGlobal(id)
     if(buscar){
         var valor = Operacion(instruccion.expresion, entorno, errores, simbolo)
+        if(valor.hasOwnProperty('resultado')){
+            valor = valor.resultado
+        }
         var temp = entorno.getSimboloE(id)
         let variable = temp.resultado
         let antiguo = variable.tipo

@@ -15,7 +15,6 @@ const TIPO_INSTRUCCION = {
     RETURN: 'RETURN',
     LLAMADA: 'LLAMADA',
     LLAMADAA: 'LLAMADAA',     //LLamada Asignacion
-    WHILE: 'WHILE',
     PRINT: 'PRINT',
     PRINTLN: 'PRINTLN',
     UPPER: 'UPPER',
@@ -28,8 +27,13 @@ const TIPO_INSTRUCCION = {
     //Sentencias de control
     IF: 'IF',
     SWITCH: 'SWITCH',
-    BREAK: 'BREAK'
-    
+    BREAK: 'BREAK',
+    CONTINUE: 'CONTINUE',
+    //Sentencias Ciclicas
+    WHILE: 'WHILE',
+    DOWHILE: 'DOWHILE',
+    FOR: 'FOR'
+
 }
 
 module.exports = TIPO_INSTRUCCION

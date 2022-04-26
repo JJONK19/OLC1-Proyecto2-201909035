@@ -8,18 +8,26 @@ function Si(instruccion, entorno, errores, simbolo){
     let v = instruccion.true
     let f = instruccion.false
     let condicion  = Operacion(c, entorno, errores, simbolo)
+    if(condicion.hasOwnProperty('resultado')){
+        condicion = condicion.resultado
+    }
     if(condicion.tipo === TIPO_DATO.BOOLEAN){
         if(condicion.valor){
             //Es verdadera la condicion
             let Local = require('./Local')
             var entornoLocal = new Entorno(entorno)
+            entornoLocal.setRetorno(entorno.retorno)
             var consola = Local(v, entornoLocal, errores, simbolo)
             if(consola != null){
-                if(typeof(consola) == 'object'){
-                    salida += consola.salida
+                if(Array.isArray(consola)){
+                    salida += consola[0]
+                    let objeto = [salida, consola[1]]
+                    salida = objeto;
+                    return salida
+                }else if(typeof(consola) == 'object'){
                     return{
                         resultado: consola.resultado,
-                        salida: salida
+                        salida: consola.salida
                     }
                 }else{
                     salida += consola +'\n'
@@ -33,13 +41,18 @@ function Si(instruccion, entorno, errores, simbolo){
                     //Es verdadera la condicion
                     let Local = require('./Local')
                     var entornoLocal = new Entorno(entorno)
+                    entornoLocal.setRetorno(entorno.retorno)
                     var consola = Local(f, entornoLocal, errores, simbolo)
                     if(consola != null){
-                        if(typeof(consola) == 'object'){
-                            salida += consola.salida
+                        if(Array.isArray(consola)){
+                            salida += consola[0]
+                            let objeto = [salida, consola[1]]
+                            salida = objeto;
+                            return salida
+                        }else if(typeof(consola) == 'object'){
                             return{
                                 resultado: consola.resultado,
-                                salida: salida
+                                salida: consola.salida
                             }
                         }else{
                             salida += consola +'\n'
@@ -49,11 +62,15 @@ function Si(instruccion, entorno, errores, simbolo){
                 }else{
                     let consola = Si(f, entorno, errores, simbolo)
                     if(consola != null){
-                        if(typeof(consola) == 'object'){
-                            salida += consola.salida
+                        if(Array.isArray(consola)){
+                            salida += consola[0]
+                            let objeto = [salida, consola[1]]
+                            salida = objeto;
+                            return salida
+                        }else if(typeof(consola) == 'object'){
                             return{
                                 resultado: consola.resultado,
-                                salida: salida
+                                salida: consola.salida
                             }
                         }else{
                             salida += consola +'\n'
@@ -65,7 +82,7 @@ function Si(instruccion, entorno, errores, simbolo){
         }
     }
     else{
-        errores.add("Semántico", 'La condición debe ser d tipo booleana para ser valida.' , instruccion.linea, instruccion.columna);
+        errores.add("Semántico", 'La condición debe ser de tipo booleana para ser valida.' , instruccion.linea, instruccion.columna);
         return 'La condición debe ser d tipo booleana para ser valida.'
     }
 }

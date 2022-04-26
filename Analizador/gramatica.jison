@@ -38,6 +38,10 @@
 "case"                      return 'case';
 "default"                   return 'default';
 "break"                     return 'break';
+"for"                       return 'for';
+"while"                     return 'while';
+"do"                        return 'do';
+"continue"                  return 'continue';
 
 /*Caraácteres básicos*/        
 "+"                         return 'mas';
@@ -407,6 +411,22 @@ INSTRUCCION: DVARIABLES
         {
                 $$ = $1;
         }
+        | CONTINUE
+        {
+                $$ = $1;
+        }
+        | WHILE
+        {
+                $$ = $1;
+        }
+        | DOWHILE
+        {
+                $$ = $1;
+        }
+        | FOR
+        {
+                $$ = $1;
+        }
         | error puntocoma
         {
                 lista.add("Sintáctico", "Token Inesperado " + $1 , @1.first_line, @1.first_column + 1);
@@ -461,6 +481,42 @@ DEFAULT:  default dospuntos INSTRUCCIONES
                  $$ = INSTRUCCION.default(null, $3, this._$.first_line, this._$.first_column+1)
         }
 ;
+
+//While------------------------------------------------------------------------------------------
+WHILE: while parA EXPRESION parC llavA INSTRUCCIONES llavC 
+        {
+                $$ = INSTRUCCION.while($3, $6, this._$.first_line, this._$.first_column+1)
+        }
+;
+//Do While------------------------------------------------------------------------------------------
+DOWHILE: do llavA INSTRUCCIONES llavC while parA EXPRESION parC puntocoma
+        {
+                $$ = INSTRUCCION.dowhile($7, $3, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+//Do While------------------------------------------------------------------------------------------
+FOR: for parA DVAR puntocoma EXPRESION puntocoma AVAR parC llavA INSTRUCCIONES llavC
+        {
+               $$ = INSTRUCCION.for($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)
+        }
+        | for parA AVAR puntocoma EXPRESION puntocoma AVAR parC llavA INSTRUCCIONES llavC
+        {
+                $$ = INSTRUCCION.for($3, $5, $7, $10, this._$.first_line, this._$.first_column+1)
+        }
+;
+
+DVAR:  TIPO LISTAID asignar EXPRESION
+        {
+                $$= INSTRUCCION.declaracionv($1, $2, $4, this._$.first_line, this._$.first_column+1);
+        }
+;
+
+AVAR: identificador asignar EXPRESION 
+        {
+               $$ = INSTRUCCION.asignacionv($1,$3, this._$.first_line, this._$.first_column+1); 
+        }
+;
 //Funcion Return---------------------------------------------------------------------------------------
 RETURN: return puntocoma 
         {
@@ -478,7 +534,12 @@ BREAK: break puntocoma
                 $$= INSTRUCCION.break(this._$.first_line, this._$.first_column+1)
         }
 ;
-
+//Funcion Continue---------------------------------------------------------------------------------------
+CONTINUE: continue puntocoma 
+        {
+                $$= INSTRUCCION.continue(this._$.first_line, this._$.first_column+1)
+        }
+;
 //Funcion Print---------------------------------------------------------------------------------------
 PRINT: print parA EXPRESION parC puntocoma
         {

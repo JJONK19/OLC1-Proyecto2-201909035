@@ -1,17 +1,38 @@
 const TIPO_DATO = require("../enum/TipoDato")
+const TIPO_INSTRUCCION = require("../enum/TipoInstruccion")
 const Entorno = require("../datos/Entorno")
 const Operacion = require("../operacion/Operaciones")
+const AsignacionVariable = require("./AsignacionVariable")
+const DeclararVariable = require("./DeclararVariable")
 
-function While(instruccion, entorno, errores, simbolo){
+function For(instruccion, entorno, errores, simbolo){
     let salida = ""
-    let condicion  = Operacion(instruccion.condicion, entorno, errores, simbolo)  
+    let entornoLocal = new Entorno(entorno)
+    entornoLocal.setRetorno(entorno.retorno)
+    let actualizar = instruccion.actualizacion
+    //Asignar Variable
+    let asignacion = instruccion.variable
+    if(asignacion.tipo === TIPO_INSTRUCCION.DECLARACIONV){
+        let consola = DeclararVariable(asignacion, entornoLocal, errores, simbolo, entornoLocal.nombre)
+        if(consola != null){
+            salida += consola + "\n"
+        }
+    }else{
+        let consola = AsignacionVariable(asignacion, entornoLocal, errores, simbolo, entorno.nombre)
+        if(consola != null){
+            salida += consola +'\n'
+        }
+    }
+    console.log(entornoLocal)
+    console.log(simbolo)
+    
+    //Evaluar si la condicion es booleana
+    let condicion  = Operacion(instruccion.condicion, entornoLocal, errores, simbolo)  
     if(condicion.hasOwnProperty('resultado')){
         condicion = condicion.resultado
     }
     if(condicion.tipo === TIPO_DATO.BOOLEAN){
         let ban = 0
-        let entornoLocal = new Entorno(entorno)
-        entornoLocal.setRetorno(entorno.retorno)
         while(condicion.valor){
             let Local = require('./Local')
             let consola = Local(instruccion.instrucciones, entornoLocal, errores, simbolo)
@@ -37,6 +58,12 @@ function While(instruccion, entorno, errores, simbolo){
             if(ban == 1){
                 break;
             }else{
+                //Actualizar 
+                consola = AsignacionVariable(actualizar, entornoLocal, errores, simbolo, entorno.nombre)
+                if(consola != null){
+                    salida += consola +'\n'
+                }
+                //Evaluar Condicion
                 condicion = Operacion(instruccion.condicion, entornoLocal, errores, simbolo)  
                 if(condicion.hasOwnProperty('resultado')){
                     condicion = condicion.resultado
@@ -50,4 +77,4 @@ function While(instruccion, entorno, errores, simbolo){
     }
 }
 
-module.exports = While
+module.exports = For

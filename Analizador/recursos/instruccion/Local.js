@@ -7,6 +7,8 @@ const DeclararArreglos = require("./DeclararArreglos")
 const Si = require("./Si")
 const Switch = require("./Switch")
 const While = require("./While")
+const For = require("./For")
+const DoWhile = require("./DoWhile")
 const Print = require("./Print")
 const Return = require("./Return")
 
@@ -91,12 +93,27 @@ function Local(instrucciones, entorno, errores, simbolo){
             }
         }
         else if (instrucciones[i].tipo === TIPO_INSTRUCCION.BREAK){
+            let objeto = [salida, "BREAK"]
+            salida = objeto;
             ban = 1;
+
         }
+
+        else if (instrucciones[i].tipo === TIPO_INSTRUCCION.CONTINUE){
+            ban = 1;
+            let objeto = [salida, "CONTINUE"]
+            salida = objeto;
+        }
+
         else if(instrucciones[i].tipo === TIPO_INSTRUCCION.IF){
             var consola = Si(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
-                if(typeof(consola) === 'object'){
+                if(Array.isArray(consola)){
+                    ban = 1
+                    salida += consola[0]
+                    let objeto = [salida, consola[1]]
+                    salida = objeto;
+                }else if(typeof(consola) == 'object'){
                     ban = 1;
                     salida += consola.salida +'\n'
                     let objeto = {
@@ -104,7 +121,6 @@ function Local(instrucciones, entorno, errores, simbolo){
                         salida: salida
                     }
                     salida = objeto;
-                    return salida
                 }else{
                     salida += consola +'\n'
                 }
@@ -113,7 +129,12 @@ function Local(instrucciones, entorno, errores, simbolo){
         else if(instrucciones[i].tipo === TIPO_INSTRUCCION.SWITCH){
             var consola = Switch(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
-                if(typeof(consola) === 'object'){
+                if(Array.isArray(consola)){
+                    ban = 1
+                    salida += consola[0]
+                    let objeto = [salida, consola[1]]
+                    salida = objeto;
+                }else if(typeof(consola) == 'object'){
                     ban = 1;
                     salida += consola.salida +'\n'
                     let objeto = {
@@ -121,7 +142,6 @@ function Local(instrucciones, entorno, errores, simbolo){
                         salida: salida
                     }
                     salida = objeto;
-                    return salida
                 }else{
                     salida += consola +'\n'
                 }
@@ -130,7 +150,59 @@ function Local(instrucciones, entorno, errores, simbolo){
         else if(instrucciones[i].tipo === TIPO_INSTRUCCION.WHILE){
             var consola = While(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
-                salida += consola +'\n'
+                if(Array.isArray(consola)){
+                    ban = 1
+                    salida += consola[0]
+                    let objeto = [salida, consola[1]]
+                    salida = objeto;
+                }else if(typeof(consola) == 'object'){
+                    ban = 1;
+                    salida += consola.salida +'\n'
+                    let objeto = {
+                        resultado: consola,
+                        salida: salida
+                    }
+                    salida = objeto;
+                }else{
+                    salida += consola +'\n'
+                }
+            }
+        }
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.FOR){
+            var consola = For(instrucciones[i], entorno, errores, simbolo)
+            if(consola != null){
+                if(Array.isArray(consola)){
+                    ban = 1
+                    salida += consola[0]
+                    let objeto = [salida, consola[1]]
+                    salida = objeto;
+                }else if(typeof(consola) == 'object'){
+                    ban = 1;
+                    salida += consola.salida +'\n'
+                    let objeto = {
+                        resultado: consola,
+                        salida: salida
+                    }
+                    salida = objeto;
+                }else{
+                    salida += consola +'\n'
+                }
+            }
+        }
+        else if(instrucciones[i].tipo === TIPO_INSTRUCCION.DOWHILE){
+            var consola = DoWhile(instrucciones[i], entorno, errores, simbolo)
+            if(consola != null){
+                if(typeof(consola) == 'object'){
+                    ban = 1;
+                    salida += consola.salida +'\n'
+                    let objeto = {
+                        resultado: consola,
+                        salida: salida
+                    }
+                    salida = objeto;
+                }else{
+                    salida += consola +'\n'
+                }
             }
         }
         else if(instrucciones[i].tipo === TIPO_INSTRUCCION.PRINT){

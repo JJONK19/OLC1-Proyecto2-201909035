@@ -39,7 +39,10 @@ function Run(instruccion, entorno, errores, simbolo){
                     }
                     let ejecutar = Local(buscar.instrucciones, entornoLocal, errores, simbolo)
                     if(ejecutar != null){
-                        if(typeof(ejecutar) == 'object'){
+                        if(Array.isArray(ejecutar)){
+                            errores.add("Semántico", `Las sentencias continue o break solo se pueden usar en ciclos.` , instruccion.linea, instruccion.columna);
+                            return `Las sentencias continue o break solo se pueden usar en ciclos.`
+                        }else if(typeof(ejecutar) == 'object'){
                             return{
                                 resultado: ejecutar.resultado,
                                 salida: ejecutar.salida
@@ -59,7 +62,10 @@ function Run(instruccion, entorno, errores, simbolo){
             else {
                 let ejecutar = Local(buscar.instrucciones, entornoLocal, errores, simbolo)
                 if(ejecutar != null){
-                    if(typeof(ejecutar) == 'object'){
+                    if(Array.isArray(ejecutar)){
+                        errores.add("Semántico", `Las sentencias continue o break solo se pueden usar en ciclos.` , instruccion.linea, instruccion.columna);
+                        return `Las sentencias continue o break solo se pueden usar en ciclos.`
+                    }else if(typeof(ejecutar) == 'object'){
                         return{
                             resultado: ejecutar.resultado,
                             salida: ejecutar.salida

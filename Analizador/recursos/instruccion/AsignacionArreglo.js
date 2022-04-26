@@ -8,6 +8,9 @@ function AsignacionA(instruccion, entorno, errores, simbolo, entornoName){
     const buscar = entorno.buscarSimboloGlobal(id)
     if(buscar){
         var valor = Operaciones(instruccion.expresion, entorno, errores, simbolo)
+        if(valor.hasOwnProperty('resultado')){
+            valor = valor.resultado
+        }
         var variable = entorno.getSimboloE(id)
         var temp = variable.resultado
         let antiguo = temp.tipo
@@ -17,6 +20,9 @@ function AsignacionA(instruccion, entorno, errores, simbolo, entornoName){
             if(posicion2 == null){
                 //Arreglos Unidimensionales
                 let tamaño1 = Operaciones(posicion1, entorno, errores, simbolo)
+                if(tamaño1.hasOwnProperty('resultado')){
+                    tamaño1 = tamaño1.resultado
+                }
                 if(tamaño1.tipo === TIPO_DATO.INT){
                     if(Array.isArray(temp.valor)){
                         let salida = temp.valor[tamaño1.valor]
@@ -54,6 +60,12 @@ function AsignacionA(instruccion, entorno, errores, simbolo, entornoName){
                 //Arreglos Bidimensionales
                 let tamaño1 = Operaciones(posicion1, entorno, errores, simbolo)
                 let tamaño2 = Operaciones(posicion2, entorno, errores, simbolo)
+                if(tamaño1.hasOwnProperty('resultado')){
+                    tamaño1 = tamaño1.resultado
+                }
+                if(tamaño2.hasOwnProperty('resultado')){
+                    tamaño2 = tamaño2.resultado
+                }
                 if(tamaño1.tipo === TIPO_DATO.INT && tamaño2.tipo === TIPO_DATO.INT){
                     if(Array.isArray(temp.valor)){
                         let salida = temp.valor[tamaño1.valor][tamaño2.valor]

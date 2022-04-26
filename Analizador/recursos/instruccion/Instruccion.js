@@ -165,8 +165,28 @@ const Instruccion = {
     while: function(_expresion, _instrucciones, _linea, _columna){
         return {
             tipo: TIPO_INSTRUCCION.WHILE,
-            expresion: _expresion,
+            condicion: _expresion,
             instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    dowhile: function(_expresion, _instrucciones, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.DOWHILE,
+            condicion: _expresion,
+            instrucciones: _instrucciones,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    for: function(variable, condicion, actualizacion, instrucciones, _linea, _columna){
+        return {
+            tipo: TIPO_INSTRUCCION.FOR,
+            variable: variable,
+            condicion: condicion,
+            actualizacion: actualizacion,
+            instrucciones: instrucciones,
             linea: _linea,
             columna: _columna
         }
@@ -285,6 +305,13 @@ const Instruccion = {
     break: function( _linea, _columna){
         return{
             tipo: TIPO_INSTRUCCION.BREAK,
+            linea: _linea,
+            columna: _columna
+        }
+    },
+    continue: function( _linea, _columna){
+        return{
+            tipo: TIPO_INSTRUCCION.CONTINUE,
             linea: _linea,
             columna: _columna
         }

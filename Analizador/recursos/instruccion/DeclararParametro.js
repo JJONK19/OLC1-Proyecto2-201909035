@@ -10,6 +10,9 @@ function DeclararParametro(instruccion, entorno,  errores, simbolo, entornoName)
         let valor = 0
         if(instruccion.valor != null){
             let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
+            if(resultado.hasOwnProperty('resultado')){
+                resultado = resultado.resultado
+            }
             if(resultado.tipo === TIPO_DATO.INT){
                 valor = resultado.valor
             }
@@ -33,6 +36,9 @@ function DeclararParametro(instruccion, entorno,  errores, simbolo, entornoName)
         let valor = 0.0
         if(instruccion.valor != null){
             let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
+            if(resultado.hasOwnProperty('resultado')){
+                resultado = resultado.resultado
+            }
             if(resultado.tipo === TIPO_DATO.DOUBLE){
                 valor = resultado.valor
             }
@@ -55,6 +61,9 @@ function DeclararParametro(instruccion, entorno,  errores, simbolo, entornoName)
         let valor = true
         if(instruccion.valor != null){
             let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
+            if(resultado.hasOwnProperty('resultado')){
+                resultado = resultado.resultado
+            }
             if(resultado.tipo === TIPO_DATO.BOOLEAN){
                 valor = resultado.valor
             }
@@ -77,6 +86,9 @@ function DeclararParametro(instruccion, entorno,  errores, simbolo, entornoName)
         let valor = '\u0000'
         if(instruccion.valor != null){
             let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
+            if(resultado.hasOwnProperty('resultado')){
+                resultado = resultado.resultado
+            }
             if(resultado.tipo === TIPO_DATO.CHAR){
                 valor = resultado.valor
             }
@@ -99,6 +111,9 @@ function DeclararParametro(instruccion, entorno,  errores, simbolo, entornoName)
         let valor = ''
         if(instruccion.valor != null){
             let resultado = Operacion(instruccion.valor, entorno, errores, simbolo)
+            if(resultado.hasOwnProperty('resultado')){
+                resultado = resultado.resultado
+            }
             if(resultado.tipo === TIPO_DATO.STRING){
                 valor = resultado.valor
             }

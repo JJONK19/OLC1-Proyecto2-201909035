@@ -2,7 +2,7 @@ const TIPO_DATO = require("../enum/TipoDato")
 const Entorno = require("../datos/Entorno")
 const Operacion = require("../operacion/Operaciones")
 
-function While(instruccion, entorno, errores, simbolo){
+function DoWhile(instruccion, entorno, errores, simbolo){
     let salida = ""
     let condicion  = Operacion(instruccion.condicion, entorno, errores, simbolo)  
     if(condicion.hasOwnProperty('resultado')){
@@ -12,7 +12,7 @@ function While(instruccion, entorno, errores, simbolo){
         let ban = 0
         let entornoLocal = new Entorno(entorno)
         entornoLocal.setRetorno(entorno.retorno)
-        while(condicion.valor){
+        do{
             let Local = require('./Local')
             let consola = Local(instruccion.instrucciones, entornoLocal, errores, simbolo)
             //COrrer Instrucciones
@@ -37,12 +37,13 @@ function While(instruccion, entorno, errores, simbolo){
             if(ban == 1){
                 break;
             }else{
-                condicion = Operacion(instruccion.condicion, entornoLocal, errores, simbolo)  
+                condicion = Operacion(instruccion.condicion, entornoLocal, errores, simbolo)     
                 if(condicion.hasOwnProperty('resultado')){
                     condicion = condicion.resultado
-                }   
+                }
             }
         }
+        while(condicion.valor)
         return salida
     }else{
         errores.add("Semántico", 'La condición debe retornar un tipo booleano para proceder.' , instruccion.linea, instruccion.columna);
@@ -50,4 +51,4 @@ function While(instruccion, entorno, errores, simbolo){
     }
 }
 
-module.exports = While
+module.exports = DoWhile

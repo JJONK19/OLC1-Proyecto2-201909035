@@ -134,7 +134,7 @@ function Valores(expresion, entorno, errores){
         }
     }
     else if(expresion.tipo === TIPO_VALOR.IDENTIFICADOR){
-        const temp = entorno.getSimbolo(expresion.valor)
+        let temp = entorno.getSimbolo(expresion.valor)
         if(temp!=null){
             return {
                 valor: temp.valor,
@@ -160,8 +160,11 @@ function ValoresV(expresion, entorno, errores, simbolo){
     if(posicion2 == null){
         //Vectores Unidimensionales
         let tamaño1 = Operaciones(posicion1, entorno, errores, simbolo)
+        if(tamaño1.hasOwnProperty('resultado')){
+            tamaño1 = tamaño1.resultado
+        }
         if(tamaño1.tipo === TIPO_DATO.INT){
-            const temp = entorno.getSimbolo(id)
+            let temp = entorno.getSimbolo(id)
             if(temp!=null){
                 if(Array.isArray(temp.valor)){
                     let salida = temp.valor[tamaño1.valor]
@@ -208,8 +211,14 @@ function ValoresV(expresion, entorno, errores, simbolo){
         //Vectores Bidimensionales
         let tamaño1 = Operaciones(posicion1, entorno, errores, simbolo)
         let tamaño2 = Operaciones(posicion2, entorno, errores, simbolo)
+        if(tamaño1.hasOwnProperty('resultado')){
+            tamaño1 = tamaño1.resultado
+        }
+        if(derecha.hasOwnProperty('resultado')){
+            tamaño2 = tamaño2.resultado
+        }
         if(tamaño1.tipo === TIPO_DATO.INT && tamaño2.tipo === TIPO_DATO.INT){
-            const temp = entorno.getSimbolo(id)
+            let temp = entorno.getSimbolo(id)
             if(temp!=null){
                 if(Array.isArray(temp.valor)){
                     let salida = temp.valor[tamaño1.valor][tamaño2.valor]
@@ -258,10 +267,13 @@ function ValoresV(expresion, entorno, errores, simbolo){
 
 
 function llamada(expresion, entorno, errores, simbolo){
-    const Run = require("../instruccion/Run");
+    let Run = require("../instruccion/Run");
     var consola = Run(expresion, entorno, errores, simbolo)
     if(typeof(consola) == 'object'){
-        return consola.resultado
+        if(consola.hasOwnProperty('resultado')){
+            consola = consola.resultado
+        }
+        return consola
     }else{
         errores.add("Semántico", "No se obtuvo un resultado como retorno." + expresion.valor , expresion.linea, expresion.columna);
         return {
@@ -276,9 +288,15 @@ function llamada(expresion, entorno, errores, simbolo){
 //Operacioness
 
 function suma(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.SUMA)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.SUMA)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
@@ -288,7 +306,7 @@ function suma(_izquierda, _derecha, entorno, errores, simbolo){
             }else if(op2.tipo === TIPO_DATO.CHAR){
                 op2.valor = op2.valor.charCodeAt(0);
             }
-            const resultado = op1.valor + op2.valor;
+            let resultado = op1.valor + op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -303,7 +321,7 @@ function suma(_izquierda, _derecha, entorno, errores, simbolo){
             }else if(op2.tipo === TIPO_DATO.CHAR){
                 op2.valor = op2.valor.charCodeAt(0);
             }
-            const resultado = op1.valor + op2.valor;
+            let resultado = op1.valor + op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -313,7 +331,7 @@ function suma(_izquierda, _derecha, entorno, errores, simbolo){
         }else if(tipoSalida === TIPO_DATO.STRING){
             let op1 = izquierda;
             let op2 = derecha;
-            const resultado = op1.valor + op2.valor;
+            let resultado = op1.valor + op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -334,9 +352,15 @@ function suma(_izquierda, _derecha, entorno, errores, simbolo){
 
 
 function resta(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.RESTA)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.RESTA)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
@@ -346,7 +370,7 @@ function resta(_izquierda, _derecha, entorno, errores, simbolo){
             }else if(op2.tipo === TIPO_DATO.CHAR){
                 op2.valor = op2.valor.charCodeAt(0);
             }
-            const resultado = op1.valor - op2.valor;
+            let resultado = op1.valor - op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -361,7 +385,7 @@ function resta(_izquierda, _derecha, entorno, errores, simbolo){
             }else if(op2.tipo === TIPO_DATO.CHAR){
                 op2.valor = op2.valor.charCodeAt(0);
             }
-            const resultado = op1.valor - op2.valor;
+            let resultado = op1.valor - op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -381,9 +405,21 @@ function resta(_izquierda, _derecha, entorno, errores, simbolo){
 
 
 function multiplicacion(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MULTIPLICACION)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MULTIPLICACION)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
@@ -393,7 +429,7 @@ function multiplicacion(_izquierda, _derecha, entorno, errores, simbolo){
             }else if(op2.tipo === TIPO_DATO.CHAR){
                 op2.valor = op2.valor.charCodeAt(0);
             }
-            const resultado = op1.valor * op2.valor;
+            let resultado = op1.valor * op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -408,7 +444,7 @@ function multiplicacion(_izquierda, _derecha, entorno, errores, simbolo){
             }else if(op2.tipo === TIPO_DATO.CHAR){
                 op2.valor = op2.valor.charCodeAt(0);
             }
-            const resultado = op1.valor * op2.valor;
+            let resultado = op1.valor * op2.valor;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -428,9 +464,15 @@ function multiplicacion(_izquierda, _derecha, entorno, errores, simbolo){
 
 
 function division(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.DIVISION)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.DIVISION)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.DOUBLE){
             let op1 = izquierda;
@@ -449,7 +491,7 @@ function division(_izquierda, _derecha, entorno, errores, simbolo){
                     columna: null
                 }
             }else{
-                const resultado = op1.valor / op2.valor;
+                let resultado = op1.valor / op2.valor;
                 return {
                     valor: resultado,
                     tipo: tipoSalida,
@@ -470,14 +512,20 @@ function division(_izquierda, _derecha, entorno, errores, simbolo){
 
 
 function potencia(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.POTENCIA)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.POTENCIA)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
             let op2 = derecha;
-            const resultado = Math.pow(op1.valor, op2.valor);
+            let resultado = Math.pow(op1.valor, op2.valor);
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -487,7 +535,7 @@ function potencia(_izquierda, _derecha, entorno, errores, simbolo){
         }else if(tipoSalida === TIPO_DATO.DOUBLE){
             let op1 = izquierda;
             let op2 = derecha;
-            const resultado = Math.pow(op1.valor, op2.valor);
+            let resultado = Math.pow(op1.valor, op2.valor);
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -506,9 +554,15 @@ function potencia(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function modulo(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MODULO)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MODULO)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.DOUBLE){
             let op1 = izquierda;
@@ -522,7 +576,7 @@ function modulo(_izquierda, _derecha, entorno, errores, simbolo){
                     columna: expresion.columna
                 }
             }else{
-                const resultado = op1.valor % op2.valor;
+                let resultado = op1.valor % op2.valor;
                 return {
                     valor: resultado,
                     tipo: tipoSalida,
@@ -542,12 +596,15 @@ function modulo(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function unario(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.UNARIO)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.UNARIO)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.DOUBLE || tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
-            const resultado = op1.valor * -1;
+            let resultado = op1.valor * -1;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -567,9 +624,15 @@ function unario(_izquierda, _derecha, entorno, errores, simbolo){
 
 //Operaciones
 function igual(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.IGUAL)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.IGUAL)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -599,9 +662,15 @@ function igual(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function desigual(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.DESIGUAL)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.DESIGUAL)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -631,9 +700,15 @@ function desigual(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function mayorigual(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MAYORIGUAL)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MAYORIGUAL)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -663,9 +738,15 @@ function mayorigual(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function menorigual(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MENORIGUAL)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MENORIGUAL)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -695,9 +776,15 @@ function menorigual(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function mayor(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MAYOR)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MAYOR)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -727,9 +814,15 @@ function mayor(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function menor(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MENOR)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.MENOR)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -759,9 +852,18 @@ function menor(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function ternario(_condicion, _izquierda, _derecha, entorno, errores, simbolo){
-    const condicion = Operaciones(_condicion, entorno, errores, simbolo)
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    let condicion = Operaciones(_condicion, entorno, errores, simbolo)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    if(condicion.hasOwnProperty('resultado')){
+        condicion = condicion.resultado
+    }
     if(condicion.tipo === TIPO_DATO.BOOLEAN){
         if(condicion.valor){
             return {
@@ -789,9 +891,15 @@ function ternario(_condicion, _izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function and(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.AND)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.AND)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -817,9 +925,15 @@ function and(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function or(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const derecha = Operaciones(_derecha, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.OR)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    let derecha = Operaciones(_derecha, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    if(derecha.hasOwnProperty('resultado')){
+        derecha = derecha.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, derecha.tipo, TIPO_OPERACION.OR)
     if(tipoSalida!=null){
         let op1 = izquierda;
         let op2 = derecha;
@@ -845,8 +959,11 @@ function or(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function not(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.NOT)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.NOT)
     if(tipoSalida!=null){
         let op1 = izquierda;
 
@@ -870,9 +987,12 @@ function not(_izquierda, _derecha, entorno, errores, simbolo){
 
 //Otros
 function casteo(_casteo, _expresion, entorno, errores, simbolo){
-    const valor = Operaciones(_expresion, entorno, errores, simbolo)
-    const nuevo = _casteo
-    const tipoSalida = Tipos(valor.tipo, nuevo, TIPO_OPERACION.CASTEO)
+    let valor = Operaciones(_expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
+    let nuevo = _casteo
+    let tipoSalida = Tipos(valor.tipo, nuevo, TIPO_OPERACION.CASTEO)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.INT){
             let salida = valor;
@@ -924,12 +1044,15 @@ function casteo(_casteo, _expresion, entorno, errores, simbolo){
 }
 
 function incremento(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.INCREMENTO)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.INCREMENTO)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.DOUBLE || tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
-            const resultado = op1.valor + 1;
+            let resultado = op1.valor + 1;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -948,12 +1071,15 @@ function incremento(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function decremento(_izquierda, _derecha, entorno, errores, simbolo){
-    const izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
-    const tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.DECREMENTO)
+    let izquierda = Operaciones(_izquierda, entorno, errores, simbolo)
+    if(izquierda.hasOwnProperty('resultado')){
+        izquierda = izquierda.resultado
+    }
+    let tipoSalida = Tipos(izquierda.tipo, null, TIPO_OPERACION.DECREMENTO)
     if(tipoSalida!=null){
         if(tipoSalida === TIPO_DATO.DOUBLE || tipoSalida === TIPO_DATO.INT){
             let op1 = izquierda;
-            const resultado = op1.valor - 1;
+            let resultado = op1.valor - 1;
             return {
                 valor: resultado,
                 tipo: tipoSalida,
@@ -972,7 +1098,10 @@ function decremento(_izquierda, _derecha, entorno, errores, simbolo){
 }
 
 function upper(expresion, entorno, errores, simbolo){
-    const valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(valor.tipo == TIPO_DATO.STRING){
         let resultado = valor.valor.toUpperCase()
         return {
@@ -993,7 +1122,10 @@ function upper(expresion, entorno, errores, simbolo){
 }
 
 function lower(expresion, entorno, errores, simbolo){
-    const valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(valor.tipo == TIPO_DATO.STRING){
         let resultado = valor.valor.toLowerCase()
         return {
@@ -1015,7 +1147,10 @@ function lower(expresion, entorno, errores, simbolo){
 }
 
 function round(expresion, entorno, errores, simbolo){
-    const valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor= Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(valor.tipo == TIPO_DATO.DOUBLE || valor.tipo == TIPO_DATO.INT){
         let resultado = Math.round(valor.valor)
         return {
@@ -1037,7 +1172,10 @@ function round(expresion, entorno, errores, simbolo){
 }
 
 function length(expresion, entorno, errores, simbolo){
-    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(valor.tipo == TIPO_DATO.STRING || Array.isArray(valor.valor)){
         let resultado = valor.valor.length
         return {
@@ -1059,7 +1197,10 @@ function length(expresion, entorno, errores, simbolo){
 }
 
 function type(expresion, entorno, errores, simbolo){
-    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(Array.isArray(valor.valor)){
         let resultado = "ARRAY"
         return {
@@ -1081,7 +1222,10 @@ function type(expresion, entorno, errores, simbolo){
 }
 
 function tostring(expresion, entorno, errores, simbolo){
-    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(!Array.isArray(valor.valor)){
         if(valor.tipo == TIPO_DATO.INT || valor.tipo == TIPO_DATO.DOUBLE || valor.tipo == TIPO_DATO.BOOLEAN){
             let resultado = valor.valor.toString()
@@ -1113,7 +1257,10 @@ function tostring(expresion, entorno, errores, simbolo){
 }
 
 function tochar(expresion, entorno, errores, simbolo){
-    const valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    let valor = Operaciones(expresion.expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(valor.tipo == TIPO_DATO.STRING){
         let resultado = [...valor.valor]
         return {

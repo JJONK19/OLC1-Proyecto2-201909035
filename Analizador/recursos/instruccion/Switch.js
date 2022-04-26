@@ -8,6 +8,9 @@ function Switch(instruccion, entorno, errores, simbolo){
     let casos = instruccion.casos
     let def = instruccion.default
     let valor  = Operacion(expresion, entorno, errores, simbolo)
+    if(valor.hasOwnProperty('resultado')){
+        valor = valor.resultado
+    }
     if(valor.tipo != "ERROR"){
         let ban = 0;
 
@@ -17,6 +20,9 @@ function Switch(instruccion, entorno, errores, simbolo){
             }
 
             let val = Operacion(casos[i].valor, entorno, errores, simbolo)
+            if(val.hasOwnProperty('resultado')){
+                val = val.resultado
+            }
             if(val.valor == valor.valor){
                 //Revisar si viene un break
                 for(let j = 0; j < casos[i].instrucciones.length; j++){
@@ -28,19 +34,25 @@ function Switch(instruccion, entorno, errores, simbolo){
                 //Ejecutar Instrucciones
                 let Local = require('./Local')
                 var entornoLocal = new Entorno(entorno)
+                entornoLocal.setRetorno(entorno.retorno)
                 var consola = Local(casos[i].instrucciones, entornoLocal, errores, simbolo)
                 if(consola != null){
-                    if(typeof(consola) == 'object'){
-                        ban = 1
-                        salida += consola.salida +'\n'
-                        let objeto = {
-                            resultado: consola,
-                            salida: salida
+                    if(Array.isArray(consola)){
+                        salida += consola[0]
+                        if(consola[1] == "CONTINUE"){
+                            errores.add("Semántico", `Las sentencias continue solo se pueden usar en ciclos.` , instruccion.linea, instruccion.columna);
+                            return `Las sentencias continue solo se pueden usar en ciclos.`
                         }
-                        salida = objeto;
-                        return salida
+                    }else if(typeof(consola) == 'object'){
+                        let objeto = {
+                            resultado: consola.resultado,
+                            salida: consola.salida
+                        }
+                        salida = objeto
+                        ban = 1
                     }else{
                         salida += consola +'\n'
+                        return salida
                     }
                 }
             }
@@ -51,19 +63,23 @@ function Switch(instruccion, entorno, errores, simbolo){
             //Ejecutar Instrucciones
             let Local = require('./Local')
             var entornoLocal = new Entorno(entorno)
+            entornoLocal.setRetorno(entorno.retorno)
             var consola = Local(def.instrucciones, entornoLocal, errores, simbolo)
             if(consola != null){
-                if(typeof(consola) == 'object'){
-                    ban = 1
-                    salida += consola.salida +'\n'
-                    let objeto = {
-                        resultado: consola,
-                        salida: salida
+                if(Array.isArray(consola)){
+                    salida += consola[0]
+                    if(consola[1] == "CONTINUE"){
+                        errores.add("Semántico", `Las sentencias continue solo se pueden usar en ciclos.` , instruccion.linea, instruccion.columna);
+                        return `Las sentencias continue solo se pueden usar en ciclos.`
                     }
-                    salida = objeto;
-                    return salida
+                }else if(typeof(consola) == 'object'){
+                    return{
+                        resultado: consola.resultado,
+                        salida: consola.salida
+                    }
                 }else{
                     salida += consola +'\n'
+                    return salida
                 }
             }
         }
