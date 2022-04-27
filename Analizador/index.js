@@ -3,6 +3,7 @@ const express = require('express')
 const bodParser = require('body-parser')
 const Entorno = require("./recursos/datos/Entorno");
 const Iniciar = require("./recursos/instruccion/Iniciar");
+const Codigo = require("./recursos/AST/Graphviz");
 let cors = require('cors')
 
 const app = express()
@@ -21,19 +22,27 @@ app.get('/',(req,res)=>{
 
 app.post('/analizar',(req,res)=>{
     let parser = require('./gramatica');
+    let parse = require('./arbol');
     var entrada = req.body.entrada;
     var arbol = parser.parse(entrada)
+    var a = parse.parse(entrada)
     //Extraer Valores
     var errores = arbol.lerrores
     var simbolo = arbol.lsimbolos;
     var metodos = arbol.lmetodos
+    var ast = a.arbol
+    var graphviz = Codigo(ast)
+    console.log("-------------------------------------")
+    console.log("CODIGO DE GRAPHVIZ")
+    console.log(graphviz)
+    console.log("-------------------------------------")
     //Ejecucuon de Instrucciones
     const global = new Entorno(null, "GLOBAL")
     let recorrido = Iniciar(arbol.instrucciones , global, errores, simbolo, metodos)
     //Salida
     var respuesta={
         message:"Resultado correcto",
-        //ast: arbol,        //Retorna el arbol. Debe de graficarse.
+        ast: graphviz,        //Retorna el arbol. Debe de graficarse.
         salida: recorrido,  //Retorna el texto de la consola
         errores: errores,    //Retorna la lista de errores
         simbolos: simbolo,   //Retorna la tabla de simbolos a mostrar
