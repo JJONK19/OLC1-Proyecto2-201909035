@@ -8,10 +8,11 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { NavComponent } from './nav/nav.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { AppNotDirective } from './app-not.directive';
 @NgModule({
   declarations: [
     AppComponent,
+    AppNotDirective,
     EditorComponent,
     ReportesComponent,
     NavComponent

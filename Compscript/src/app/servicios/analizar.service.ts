@@ -8,9 +8,10 @@ import { Observable } from "rxjs";
 })
 export class AnalizarService {
 
-  static el: Array<any>;
-  static sl: Array<any>;
-  static sm: Array<any>;
+  static el: Array<any>;  //ERROES
+  static sl: Array<any>; //SINBOLOS
+  static sm: Array<any>; //METODOS
+  static dot: string; //CODIGO DOT
 
   constructor(private http: HttpClient) { }
 
@@ -46,5 +47,13 @@ export class AnalizarService {
 
   getMetodos(): Array<any>{
     return AnalizarService.sm;
+  }
+
+  setDOT(lista:string):void{
+    AnalizarService.dot = lista;
+  }
+
+  getDOT(): string{
+    return AnalizarService.dot;
   }
 }

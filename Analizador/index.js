@@ -32,10 +32,6 @@ app.post('/analizar',(req,res)=>{
     var metodos = arbol.lmetodos
     var ast = a.arbol
     var graphviz = Codigo(ast)
-    console.log("-------------------------------------")
-    console.log("CODIGO DE GRAPHVIZ")
-    console.log(graphviz)
-    console.log("-------------------------------------")
     //Ejecucuon de Instrucciones
     const global = new Entorno(null, "GLOBAL")
     let recorrido = Iniciar(arbol.instrucciones , global, errores, simbolo, metodos)
