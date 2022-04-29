@@ -6,9 +6,9 @@
 %%
 
 /*Ignorar*/
-\s+                                                  //Espacios en blanco
-\/\/.*                                               //Comentario unilinea
-\/\*([^"!>"]|[\r|\f|\s|\t|\n])*\*\/                  //Comentario multilinea
+\s+                                            {}      //Espacios en blanco
+\/\/.*                                         {}      //Comentario unilinea
+\/\*([^"!>"]|[\r|\f|\s|\t|\n])*\*\/            {}      //Comentario multilinea
 
 /*Declaración de Palabras Reservadas*/
 
@@ -87,8 +87,8 @@
 \'("\n"|"\\\\"|"\t"|"\r"|\\\'|\\\"|.)\'   return 'caracter';
 
 //Regex
-[0-9]+("."[0-9]+)\b        return 'doble';
-[0-9]+\b                    return 'entero';               
+[0-9]+("."[0-9]+)        return 'doble';
+[0-9]+                    return 'entero';               
 ([a-zA-Z_])([a-zA-Z0-9_])*   return 'identificador';  
 
 /*Fin de la cadena*/

@@ -137,7 +137,6 @@ function DeclararArreglos(instruccion, entorno, errores, simbolo, entornoName){
             //console.log(instruccion.valores)
             for(let x = 0; x < instruccion.valores.length; x++){
                 let temp = instruccion.valores[x]
-                console.log(temp)
                 if(Array.isArray(temp)){
                     let add = []
                     for(let y = 0; y < temp.length; y++){

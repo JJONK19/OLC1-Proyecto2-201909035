@@ -51,9 +51,9 @@ function Local(instrucciones, entorno, errores, simbolo){
             var consola = Run(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
                 if(typeof(consola) == 'object'){
-                    salida += consola.salida +'\n'
+                    salida += consola.salida 
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }
@@ -70,7 +70,7 @@ function Local(instrucciones, entorno, errores, simbolo){
                     salida = objeto;
                     return salida
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }
@@ -115,14 +115,14 @@ function Local(instrucciones, entorno, errores, simbolo){
                     salida = objeto;
                 }else if(typeof(consola) == 'object'){
                     ban = 1;
-                    salida += consola.salida +'\n'
+                    salida += consola.salida 
                     let objeto = {
                         resultado: consola,
                         salida: salida
                     }
                     salida = objeto;
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }
@@ -136,14 +136,14 @@ function Local(instrucciones, entorno, errores, simbolo){
                     salida = objeto;
                 }else if(typeof(consola) == 'object'){
                     ban = 1;
-                    salida += consola.salida +'\n'
+                    salida += consola.salida 
                     let objeto = {
                         resultado: consola,
                         salida: salida
                     }
                     salida = objeto;
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }
@@ -157,14 +157,14 @@ function Local(instrucciones, entorno, errores, simbolo){
                     salida = objeto;
                 }else if(typeof(consola) == 'object'){
                     ban = 1;
-                    salida += consola.salida +'\n'
+                    salida += consola.salida 
                     let objeto = {
                         resultado: consola,
                         salida: salida
                     }
                     salida = objeto;
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }
@@ -178,14 +178,14 @@ function Local(instrucciones, entorno, errores, simbolo){
                     salida = objeto;
                 }else if(typeof(consola) == 'object'){
                     ban = 1;
-                    salida += consola.salida +'\n'
+                    salida += consola.salida 
                     let objeto = {
                         resultado: consola,
                         salida: salida
                     }
                     salida = objeto;
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }
@@ -194,14 +194,14 @@ function Local(instrucciones, entorno, errores, simbolo){
             if(consola != null){
                 if(typeof(consola) == 'object'){
                     ban = 1;
-                    salida += consola.salida +'\n'
+                    salida += consola.salida 
                     let objeto = {
                         resultado: consola,
                         salida: salida
                     }
                     salida = objeto;
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
         }

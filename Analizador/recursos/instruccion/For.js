@@ -20,11 +20,9 @@ function For(instruccion, entorno, errores, simbolo){
     }else{
         let consola = AsignacionVariable(asignacion, entornoLocal, errores, simbolo, entorno.nombre)
         if(consola != null){
-            salida += consola +'\n'
+            salida += consola + "\n"
         }
     }
-    console.log(entornoLocal)
-    console.log(simbolo)
     
     //Evaluar si la condicion es booleana
     let condicion  = Operacion(instruccion.condicion, entornoLocal, errores, simbolo)  
@@ -51,7 +49,7 @@ function For(instruccion, entorno, errores, simbolo){
                     salida = objeto
                     ban = 1
                 }else{
-                    salida += consola +'\n'
+                    salida += consola
                 }
             }
             //Evaluar Condicion

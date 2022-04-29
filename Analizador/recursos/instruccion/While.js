@@ -10,9 +10,9 @@ function While(instruccion, entorno, errores, simbolo){
     }
     if(condicion.tipo === TIPO_DATO.BOOLEAN){
         let ban = 0
-        let entornoLocal = new Entorno(entorno)
-        entornoLocal.setRetorno(entorno.retorno)
         while(condicion.valor){
+            let entornoLocal = new Entorno(entorno)
+            entornoLocal.setRetorno(entorno.retorno)
             let Local = require('./Local')
             let consola = Local(instruccion.instrucciones, entornoLocal, errores, simbolo)
             //COrrer Instrucciones
@@ -30,14 +30,14 @@ function While(instruccion, entorno, errores, simbolo){
                     salida = objeto
                     ban = 1
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                 }
             }
             //Evaluar Condicion
             if(ban == 1){
                 break;
             }else{
-                condicion = Operacion(instruccion.condicion, entornoLocal, errores, simbolo)  
+                condicion = Operacion(instruccion.condicion, entorno, errores, simbolo)  
                 if(condicion.hasOwnProperty('resultado')){
                     condicion = condicion.resultado
                 }   

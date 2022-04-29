@@ -48,7 +48,7 @@ function Run(instruccion, entorno, errores, simbolo){
                                 salida: ejecutar.salida
                             }
                         }else{
-                            salida += ejecutar +'\n'
+                            salida += ejecutar 
                             return salida
                         }
                     }
@@ -71,7 +71,7 @@ function Run(instruccion, entorno, errores, simbolo){
                             salida: ejecutar.salida
                         }
                     }else{
-                        salida += ejecutar +'\n'
+                        salida += ejecutar 
                         return salida
                     }
                 }

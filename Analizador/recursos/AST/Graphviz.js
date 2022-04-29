@@ -14,13 +14,18 @@ function Graphviz(raiz){
         if(padre === undefined || padre === null || padre.hijos.length === 0) {        
             return
         }else{
+            //console.log(padre.hijos)
             padre.hijos.forEach(
                 temp=> {
-                    let hijo = "N" + contador
-                    salida += hijo +"[label=\"" + temp.valor + "\"];\n";
-                    salida += nombrePadre + "->" + hijo +";\n";
-                    contador++
-                    conectar(hijo, temp);
+                    if(temp == undefined){
+
+                    }else{
+                        let hijo = "N" + contador
+                        salida += hijo +"[label=\"" + temp.valor + "\"];\n";
+                        salida += nombrePadre + "->" + hijo +";\n";
+                        contador++
+                        conectar(hijo, temp);
+                    }
                 }
             )
         }

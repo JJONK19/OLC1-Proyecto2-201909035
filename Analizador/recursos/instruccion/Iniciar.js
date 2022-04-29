@@ -48,9 +48,9 @@ function Iniciar(instrucciones, entorno, errores, simbolo, metodo){
             var consola = Run(instrucciones[i], entorno, errores, simbolo)
             if(consola != null){
                 if(typeof(consola) == 'object'){
-                    salida += consola.salida +'\n'
+                    salida += consola.salida
                 }else{
-                    salida += consola +'\n'
+                    salida += consola
                 }
             }
         }

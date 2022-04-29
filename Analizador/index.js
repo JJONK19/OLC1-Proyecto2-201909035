@@ -32,12 +32,18 @@ app.post('/analizar',(req,res)=>{
     var metodos = arbol.lmetodos
     var ast = a.arbol
     var graphviz = Codigo(ast)
+    console.log("-----------------------ArbOL--------------------------")
+    console.log(graphviz)
+    console.log("------------------------------------------------------")
     //Ejecucuon de Instrucciones
     const global = new Entorno(null, "GLOBAL")
+    console.log("INICIANDO ANALISIS")
     let recorrido = Iniciar(arbol.instrucciones , global, errores, simbolo, metodos)
+    console.log("ANALISIS FINALIZADO")
     //Salida
     var respuesta={
         message:"Resultado correcto",
+        ast: "Hola",
         ast: graphviz,        //Retorna el arbol. Debe de graficarse.
         salida: recorrido,  //Retorna el texto de la consola
         errores: errores,    //Retorna la lista de errores

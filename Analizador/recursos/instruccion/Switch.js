@@ -51,7 +51,7 @@ function Switch(instruccion, entorno, errores, simbolo){
                         salida = objeto
                         ban = 1
                     }else{
-                        salida += consola +'\n'
+                        salida += consola 
                         return salida
                     }
                 }
@@ -78,7 +78,7 @@ function Switch(instruccion, entorno, errores, simbolo){
                         salida: consola.salida
                     }
                 }else{
-                    salida += consola +'\n'
+                    salida += consola 
                     return salida
                 }
             }
